@@ -1062,11 +1062,27 @@ select.adm-in option{background:var(--adm-card)}
         <div style="max-width:520px">
           <h2 style="font-family:var(--font-h);font-size:1.2rem;color:var(--adm-text);margin-bottom:1.25rem">Settings</h2>
           <div class="set-card">
-            <h3>🟢 Supabase (Recommended)</h3>
-            <p style="color:var(--adm-mute);font-size:.78rem;margin-bottom:.75rem">
-              Free at <a href="https://supabase.com" target="_blank" style="color:var(--adm-blue)">supabase.com</a>. 
-              Create a project → run the SQL below → paste your URL and anon key.
+            <h3>🟢 Supabase — Cross-Device Sync</h3>
+            <p style="color:var(--adm-mute);font-size:.78rem;margin-bottom:.6rem">
+              Free at <a href="https://supabase.com" target="_blank" style="color:var(--adm-blue)">supabase.com</a>.
+              Syncs your menu, settings &amp; orders across <strong>all devices</strong> — including customers' phones.
             </p>
+
+            <!-- Deployment guide -->
+            <div id="deploy-guide" style="background:rgba(74,158,255,.07);border:1px solid rgba(74,158,255,.25);border-radius:10px;padding:.85rem 1rem;margin-bottom:.8rem;font-size:.76rem;color:var(--adm-text)">
+              <div style="font-weight:700;color:var(--adm-blue);margin-bottom:.5rem">🚀 One-Time Setup for Cross-Device Sync</div>
+              <div style="display:flex;flex-direction:column;gap:.45rem">
+                <div><span style="background:var(--adm-acc);color:white;border-radius:50%;width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:800;margin-right:.4rem">1</span>Create a free Supabase project at supabase.com</div>
+                <div><span style="background:var(--adm-acc);color:white;border-radius:50%;width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:800;margin-right:.4rem">2</span>Run the SQL below in Supabase SQL Editor</div>
+                <div><span style="background:var(--adm-acc);color:white;border-radius:50%;width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:800;margin-right:.4rem">3</span>Paste your URL &amp; key below → Save</div>
+                <div><span style="background:var(--adm-acc);color:white;border-radius:50%;width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:800;margin-right:.4rem">4</span><strong>Copy the code snippet below</strong> → paste into <code style="background:var(--adm-surf);padding:.1rem .3rem;border-radius:4px">index.html</code> lines 1–2 → push to GitHub</div>
+              </div>
+              <div style="margin-top:.65rem;background:var(--adm-bg);border:1px solid var(--adm-bord);border-radius:8px;padding:.6rem;font-family:monospace;font-size:.72rem;color:#A0F0C0" id="credentials-snippet">
+                Loading your credentials…
+              </div>
+              <button class="btn btn-ghost btn-sm" style="margin-top:.4rem" onclick="copyCredentialsSnippet()">📋 Copy Code Snippet</button>
+            </div>
+
             <details style="margin-bottom:.75rem">
               <summary style="cursor:pointer;font-size:.75rem;color:var(--adm-blue);outline:none">Show setup SQL ▸</summary>
               <pre id="supabase-sql-block" style="background:var(--adm-bg);border:1px solid var(--adm-bord);border-radius:8px;padding:.75rem;font-size:.7rem;color:#A0F0C0;margin-top:.5rem;overflow-x:auto;white-space:pre-wrap">create table if not exists orders (
@@ -1101,6 +1117,12 @@ create table if not exists menu_items (
   quantities  text,
   updated_at  timestamptz default now()
 );
+alter table menu_items enable row level security;
+create policy "menu select" on menu_items for select using (true);
+create policy "menu insert" on menu_items for insert with check (true);
+create policy "menu update" on menu_items for update using (true);
+create policy "menu delete" on menu_items for delete using (true);
+
 -- App settings table (syncs all admin settings across devices)
 create table if not exists app_settings (
   key   text primary key,
@@ -1114,11 +1136,11 @@ create policy "settings update" on app_settings for update using (true);
 create policy "settings delete" on app_settings for delete using (true);</pre>
               <button class="btn btn-ghost btn-sm" style="margin-top:.4rem" onclick="navigator.clipboard.writeText(document.getElementById('supabase-sql-block').textContent).then(()=>showAdmToast('📋 SQL copied!','gr'))">📋 Copy SQL</button>
             </details>
-            <div class="fg"><label>Project URL</label><input type="url" class="adm-in" id="set-sb-url" placeholder="https://xxxx.supabase.co"></div>
-            <div class="fg" style="margin-top:.5rem"><label>Anon / Public Key</label><input type="text" class="adm-in" id="set-sb-key" placeholder="eyJh…"></div>
+            <div class="fg"><label>Project URL</label><input type="url" class="adm-in" id="set-sb-url" placeholder="https://xxxx.supabase.co" oninput="updateCredentialsSnippet()"></div>
+            <div class="fg" style="margin-top:.5rem"><label>Anon / Public Key</label><input type="text" class="adm-in" id="set-sb-key" placeholder="eyJh…" oninput="updateCredentialsSnippet()"></div>
             <div style="display:flex;gap:.5rem;margin-top:.6rem;align-items:center">
-              <button class="btn btn-grn btn-sm" onclick="saveSupabaseSettings()">Save</button>
-              <button class="btn btn-ghost btn-sm" onclick="testSupabaseConnection()">🔌 Test connection</button>
+              <button class="btn btn-grn btn-sm" onclick="saveSupabaseSettings()">Save &amp; Sync</button>
+              <button class="btn btn-ghost btn-sm" onclick="testSupabaseConnection()">🔌 Test</button>
               <span id="sb-test-result" style="font-size:.75rem;color:var(--adm-mute)"></span>
             </div>
           </div>
@@ -1327,6 +1349,15 @@ create policy "settings delete" on app_settings for delete using (true);</pre>
 /* ═══════════════════════════════════════
    SHARED DATA STORE
 ═══════════════════════════════════════ */
+
+/* ──────────────────────────────────────────────────────────────
+   🔑 SUPABASE CREDENTIALS  ← Fill these in ONCE before deploying
+   Get them from: Supabase Dashboard → Settings → API
+   After filling in, push to GitHub — every device will sync!
+   ────────────────────────────────────────────────────────────── */
+const SUPABASE_URL = '';   // e.g. 'https://xxxx.supabase.co'
+const SUPABASE_KEY = '';   // e.g. 'eyJh…'
+
 const MENU_KEY     = 'rkr_menu';
 const SETTINGS_KEY = 'rkr_settings';
 
@@ -1336,6 +1367,23 @@ let cart = [];
 let editingId = null;
 let selectedImg = '';
 let admFilter = 'all';
+
+/* Merge hardcoded credentials with localStorage so both paths work:
+   - Deployed site: uses SUPABASE_URL/KEY constants (works on all devices)
+   - Local dev / admin entry: uses localStorage (backwards compatible)
+*/
+(function bootstrapCredentials() {
+  if (SUPABASE_URL && SUPABASE_KEY) {
+    // Hardcoded credentials take priority — always use them
+    settings.supabaseUrl = SUPABASE_URL;
+    settings.supabaseKey = SUPABASE_KEY;
+    localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+  } else if (!settings.supabaseUrl || !settings.supabaseKey) {
+    // No credentials at all — will work in local-only mode
+    console.info('ℹ️ No Supabase credentials. Fill SUPABASE_URL/KEY in the code, or enter them in Admin → Settings.');
+  }
+  // If only localStorage has them (admin entered manually), keep using those
+})();
 
 /* Default seed menu if empty */
 if (!menuItems) {
@@ -1477,6 +1525,31 @@ function applySettingsToUI() {
     const el = document.getElementById(id);
     if (el && val !== undefined && val !== null) el.value = val;
   });
+  updateCredentialsSnippet();
+}
+
+// Show live code snippet so admin can copy-paste into index.html for GitHub deploy
+function updateCredentialsSnippet() {
+  const snippet = document.getElementById('credentials-snippet');
+  if (!snippet) return;
+  const url = (document.getElementById('set-sb-url') || {}).value || settings.supabaseUrl || '';
+  const key = (document.getElementById('set-sb-key') || {}).value || settings.supabaseKey || '';
+  if (!url || !key) {
+    snippet.textContent = '// Enter your URL & key above, then copy this snippet ↓';
+    snippet.style.color = '#888';
+    return;
+  }
+  snippet.style.color = '#A0F0C0';
+  snippet.textContent =
+    `const SUPABASE_URL = '${url}';\nconst SUPABASE_KEY = '${key}';`;
+}
+
+function copyCredentialsSnippet() {
+  const url = (document.getElementById('set-sb-url') || {}).value || settings.supabaseUrl || '';
+  const key = (document.getElementById('set-sb-key') || {}).value || settings.supabaseKey || '';
+  if (!url || !key) { showAdmToast('⚠️ Enter URL & key first', 'rd'); return; }
+  const text = `const SUPABASE_URL = '${url}';\nconst SUPABASE_KEY = '${key}';`;
+  navigator.clipboard.writeText(text).then(() => showAdmToast('📋 Snippet copied! Paste it into index.html lines 1-2 and push to GitHub', 'gr'));
 }
 
 // Main saveSettings: save locally + to cloud
@@ -1565,20 +1638,46 @@ async function loadMenuFromCloud(silent) {
 
 // Poll every 30s — keeps storefronts on all devices in sync
 let _pollTimer = null;
+let _lastSettingsHash = '';
 function startMenuPoll() {
   if (_pollTimer) clearInterval(_pollTimer);
   updateSyncBadge();
   if (!hasSupabase()) return;
   _pollTimer = setInterval(async () => {
-    const changed = await loadMenuFromCloud(true);
-    if (changed) {
+    // Poll menu
+    const menuChanged = await loadMenuFromCloud(true);
+    if (menuChanged) {
       renderStore();
-      // If admin panel is open, refresh table too
-      if (document.getElementById('adm-panel-items').classList.contains('active')) {
+      if (document.getElementById('adm-panel-items') &&
+          document.getElementById('adm-panel-items').classList.contains('active')) {
         renderAdmTable();
       }
     }
-  }, 30000); // 30 seconds
+    // Poll settings (delivery fee, restaurant name, etc.)
+    await pollSettingsFromCloud();
+  }, 30000);
+}
+
+// Lightweight settings poll — only re-renders cart if delivery fee changed
+async function pollSettingsFromCloud() {
+  if (!hasSupabase()) return;
+  try {
+    const res = await fetch(sbUrl('app_settings?select=key,value'), { headers: sbHeaders() });
+    if (!res.ok) return;
+    const rows = await res.json();
+    if (!rows || !rows.length) return;
+    const hash = JSON.stringify(rows);
+    if (hash === _lastSettingsHash) return; // nothing changed
+    _lastSettingsHash = hash;
+    const oldFee = settings.deliveryFee;
+    rows.forEach(r => {
+      if (r.key === 'supabaseUrl' || r.key === 'supabaseKey') return;
+      try { settings[r.key] = JSON.parse(r.value); } catch(e) { settings[r.key] = r.value; }
+    });
+    saveSettingsLocal();
+    // Re-render cart if delivery fee changed
+    if (settings.deliveryFee !== oldFee) renderCart();
+  } catch(e) { /* silent */ }
 }
 
 // Update the admin topbar sync badge
