@@ -198,56 +198,140 @@ body{font-family:var(--font-b);background:var(--cream);color:var(--text);min-hei
 .add-btn:hover{background:var(--saffron);color:white;box-shadow:0 4px 14px rgba(226,55,68,0.35)}
 .add-btn:active{transform:scale(0.94)}
 
-/* Store Sidebar / Cart */
-.store-sidebar{background:white;border-radius:var(--r-lg);border:1px solid var(--border);overflow:hidden;position:sticky;top:76px;box-shadow:0 4px 24px rgba(0,0,0,0.08)}
-.sb-head{background:var(--saffron);color:white;padding:1rem 1.2rem;display:flex;align-items:center;gap:0.5rem;border-bottom:1px solid rgba(255,255,255,0.08)}
-.sb-head h2{font-family:var(--font-h);font-size:1rem;font-weight:700;flex:1;letter-spacing:-0.1px}
-.cart-items{padding:0.4rem;max-height:280px;overflow-y:auto}
-.cart-empty{padding:2rem 1.25rem;text-align:center;color:var(--muted);font-size:0.85rem}
-.cart-empty .ce-icon{font-size:2.2rem;margin-bottom:0.4rem}
+/* Store Sidebar / Checkout Basket */
+.store-sidebar{
+  background:white;border-radius:var(--r-lg);border:1px solid var(--border);
+  overflow:hidden;position:sticky;top:76px;
+  box-shadow:0 8px 32px rgba(0,0,0,0.10);
+}
+.sb-head{
+  background:linear-gradient(135deg,var(--saffron) 0%,var(--saffron2) 100%);
+  color:white;padding:1rem 1.25rem;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.sb-head h2{font-family:var(--font-h);font-size:1rem;font-weight:700;letter-spacing:-.1px}
+.sb-count-badge{
+  background:rgba(255,255,255,.25);color:white;border-radius:14px;
+  padding:.18rem .6rem;font-size:.72rem;font-weight:700;
+}
+.cart-items{padding:.5rem;max-height:300px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+.cart-empty{
+  padding:2.5rem 1.25rem;text-align:center;color:var(--muted);font-size:.85rem;
+}
+.cart-empty .ce-icon{font-size:2.4rem;margin-bottom:.5rem;display:block}
+.cart-empty p{font-size:.78rem;color:var(--muted);margin-top:.3rem}
 
-.cart-row{display:flex;align-items:center;gap:0.6rem;padding:0.6rem 0.4rem;border-bottom:1px solid var(--border)}
+/* Cart row — product card style */
+.cart-row{
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  gap:.6rem;
+  padding:.65rem .5rem;
+  border-bottom:1px solid var(--border);
+  align-items:center;
+  border-radius:8px;
+  transition:background .15s;
+}
 .cart-row:last-child{border-bottom:none}
-.cr-emoji{font-size:1.4rem;flex-shrink:0}
-.cr-info{flex:1;min-width:0}
-.cr-name{font-size:0.82rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.cr-price{font-size:0.75rem;color:var(--saffron);font-weight:700}
-.cr-qty{display:flex;align-items:center;gap:0.3rem}
+.cart-row:hover{background:var(--warm)}
+.cr-emoji{font-size:1.5rem;flex-shrink:0;width:36px;height:36px;display:flex;align-items:center;justify-content:center;background:var(--warm);border-radius:8px;}
+.cr-info{min-width:0}
+.cr-name{font-size:.82rem;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:.12rem}
+.cr-unit-price{font-size:.7rem;color:var(--muted)}
+.cr-right{display:flex;flex-direction:column;align-items:flex-end;gap:.3rem}
+.cr-line-price{font-size:.85rem;font-weight:700;color:var(--text)}
+.cr-qty{display:flex;align-items:center;gap:.3rem}
 .qty-btn{
-  width:22px;height:22px;border-radius:4px;border:1.5px solid var(--saffron);
-  background:white;cursor:pointer;font-size:0.95rem;color:var(--saffron);
+  width:24px;height:24px;border-radius:6px;border:1.5px solid var(--border);
+  background:white;cursor:pointer;font-size:1rem;color:var(--text);
   font-weight:700;display:flex;align-items:center;justify-content:center;
-  transition:all .14s;line-height:1;padding-bottom:1px;
+  transition:all .14s;line-height:1;
 }
 .qty-btn:hover{background:var(--saffron);border-color:var(--saffron);color:white}
-.qty-num{font-size:0.82rem;font-weight:700;min-width:16px;text-align:center}
+.qty-num{font-size:.82rem;font-weight:700;min-width:18px;text-align:center}
+.cr-remove{background:none;border:none;color:var(--muted);cursor:pointer;font-size:.82rem;padding:.1rem .2rem;border-radius:4px;transition:color .14s;line-height:1}
+.cr-remove:hover{color:#E05555}
 
-.order-summary{padding:0.85rem 1.1rem;border-top:1.5px solid var(--border);background:var(--warm)}
-.sum-row{display:flex;justify-content:space-between;font-size:0.82rem;color:var(--muted);margin-bottom:0.3rem}
-.sum-row.total{font-size:0.95rem;font-weight:700;color:var(--text);padding-top:0.4rem;border-top:1px solid var(--border);margin-top:0.25rem}
+/* Order summary */
+.order-summary{
+  padding:.9rem 1.2rem;
+  background:#F9FAFB;
+  border-top:1px solid var(--border);
+}
+.sum-divider{border:none;border-top:1px dashed var(--border);margin:.5rem 0}
+.sum-row{display:flex;justify-content:space-between;font-size:.82rem;color:var(--muted);margin-bottom:.28rem;align-items:center}
+.sum-row .sum-val{font-weight:600;color:var(--text)}
+.sum-row.free-del .sum-val{color:var(--sage)}
+.sum-row.total-row{
+  font-size:1rem;font-weight:800;color:var(--text);
+  padding-top:.55rem;border-top:2px solid var(--border);margin-top:.35rem;margin-bottom:0;
+}
+.sum-row.total-row .sum-val{color:var(--saffron);font-size:1.05rem}
 
-.order-form{padding:1rem 1.2rem;border-top:1px solid var(--border)}
-.of-title{font-family:var(--font-h);font-size:0.9rem;font-weight:700;color:var(--text);margin-bottom:0.75rem;letter-spacing:-0.1px}
-.form-g{margin-bottom:0.6rem}
-.form-lbl{display:block;font-size:0.7rem;font-weight:600;color:var(--muted);margin-bottom:0.24rem;text-transform:uppercase;letter-spacing:0.5px}
+/* Promo chip */
+.free-del-chip{
+  display:inline-flex;align-items:center;gap:.3rem;
+  background:rgba(96,178,70,.1);color:var(--sage);border:1px solid rgba(96,178,70,.3);
+  border-radius:14px;padding:.2rem .65rem;font-size:.7rem;font-weight:700;
+  margin:.4rem 1.2rem .1rem;
+}
+
+/* Checkout / order form */
+.checkout-panel{border-top:2px solid var(--border)}
+.checkout-steps{display:flex;align-items:center;padding:.85rem 1.2rem .6rem;gap:.35rem}
+.step-dot{
+  width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:.65rem;font-weight:800;flex-shrink:0;
+}
+.step-dot.done{background:var(--sage);color:white}
+.step-dot.active{background:var(--saffron);color:white}
+.step-dot.pending{background:var(--border);color:var(--muted)}
+.step-line{flex:1;height:2px;background:var(--border);border-radius:1px}
+.step-line.done{background:var(--sage)}
+
+.order-form{padding:.8rem 1.2rem 1.1rem}
+.of-title{
+  font-family:var(--font-h);font-size:.9rem;font-weight:700;
+  color:var(--text);margin-bottom:.7rem;letter-spacing:-.1px;
+  display:flex;align-items:center;gap:.4rem;
+}
+.form-g{margin-bottom:.55rem}
+.form-lbl{display:block;font-size:.68rem;font-weight:700;color:var(--muted);margin-bottom:.22rem;text-transform:uppercase;letter-spacing:.5px}
+.form-lbl .req{color:var(--saffron)}
 .form-in{
-  width:100%;padding:0.48rem 0.75rem;border:1.5px solid var(--border);border-radius:6px;
-  font-family:var(--font-b);font-size:0.82rem;color:var(--text);background:white;
-  outline:none;transition:border-color .18s,box-shadow .18s;
+  width:100%;padding:.5rem .75rem;border:1.5px solid var(--border);border-radius:7px;
+  font-family:var(--font-b);font-size:.83rem;color:var(--text);background:white;
+  outline:none;transition:border-color .18s,box-shadow .18s;box-sizing:border-box;
 }
-.form-in:focus{border-color:var(--saffron);box-shadow:0 0 0 3px rgba(226,55,68,0.1)}
-.form-in::placeholder{color:#AAAAAA}
+.form-in:focus{border-color:var(--saffron);box-shadow:0 0 0 3px rgba(226,55,68,.09)}
+.form-in::placeholder{color:#BBBBBB}
+.form-row-2{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
 
+/* Checkout CTA */
+.checkout-cta{padding:.2rem 1.2rem 1rem}
 .submit-btn{
-  width:100%;background:var(--saffron);color:white;border:none;padding:0.85rem;
-  border-radius:8px;font-family:var(--font-h);font-size:0.95rem;font-weight:700;
-  cursor:pointer;transition:all .2s;margin-top:0.65rem;
-  display:flex;align-items:center;justify-content:center;gap:0.4rem;letter-spacing:.2px;
-  box-shadow:0 4px 16px rgba(226,55,68,0.3);
+  width:100%;background:var(--saffron);color:white;border:none;padding:.95rem;
+  border-radius:10px;font-family:var(--font-h);font-size:.95rem;font-weight:800;
+  cursor:pointer;transition:all .2s;
+  display:flex;align-items:center;justify-content:center;gap:.5rem;letter-spacing:.2px;
+  box-shadow:0 6px 20px rgba(226,55,68,.35);
 }
-.submit-btn:hover{background:var(--saffron2);box-shadow:0 6px 20px rgba(226,55,68,0.4);transform:translateY(-1px)}
-.submit-btn:active{transform:scale(0.98)}
-.submit-btn:disabled{background:#CCCCCC;cursor:not-allowed;box-shadow:none}
+.submit-btn:hover{background:var(--saffron2);box-shadow:0 8px 24px rgba(226,55,68,.45);transform:translateY(-1px)}
+.submit-btn:active{transform:scale(.98)}
+.submit-btn:disabled{background:#CCC;cursor:not-allowed;box-shadow:none;transform:none}
+.submit-btn-sub{font-size:.68rem;font-weight:500;opacity:.85}
+.secure-note{
+  display:flex;align-items:center;justify-content:center;gap:.3rem;
+  font-size:.68rem;color:var(--muted);margin-top:.55rem;
+}
+.track-link{
+  display:block;text-align:center;font-size:.72rem;
+  color:var(--muted);margin-top:.5rem;
+}
+.track-link button{
+  background:none;border:none;color:var(--saffron);font-size:.72rem;
+  font-weight:700;cursor:pointer;padding:0;font-family:var(--font-b);
+}
 
 
 /* ══════════════════════════════════════════════
@@ -811,44 +895,76 @@ select.adm-in option{background:var(--adm-card)}
 
     <!-- Cart sidebar -->
     <div class="store-sidebar" id="cart-sidebar">
-      <div class="sb-head"><h2>🛒 Your Order</h2></div>
+      <!-- Basket header -->
+      <div class="sb-head">
+        <h2>🛒 Your Basket</h2>
+        <span class="sb-count-badge" id="sb-count-badge">0 items</span>
+      </div>
+
+      <!-- Cart items list -->
       <div class="cart-items" id="cart-items">
         <div class="cart-empty" id="cart-empty">
-          <div class="ce-icon">🍛</div>
-          <div>Cart is empty. Add something tasty!</div>
+          <span class="ce-icon">🍛</span>
+          <strong>Your basket is empty</strong>
+          <p>Add some delicious dishes from the menu!</p>
         </div>
       </div>
-      <div class="order-summary" id="order-summary" style="display:none">
-        <div class="sum-row"><span>Subtotal</span><span id="subtotal">$0</span></div>
-        <div class="sum-row"><span>Delivery</span><span id="delivery-fee-display">$3</span></div>
-        <div class="sum-row" id="free-delivery-note" style="display:none;font-size:.68rem;color:var(--sage)"><span colspan="2">🎉 Free delivery on orders over $25!</span><span></span></div>
-        <div class="sum-row total"><span>Total</span><span id="total">$0</span></div>
-      </div>
-      <div class="order-form">
-        <div class="of-title">Delivery Details</div>
-        <div class="form-g">
-          <label class="form-lbl">Full Name *</label>
-          <input type="text" class="form-in" id="f-name" placeholder="Your name">
+
+      <!-- Order summary (hidden when empty) -->
+      <div id="order-summary" style="display:none">
+        <div id="free-del-chip-wrap"></div>
+        <div class="order-summary">
+          <div class="sum-row"><span>Subtotal</span><span class="sum-val" id="subtotal">$0.00</span></div>
+          <div class="sum-row"><span>Delivery fee</span><span class="sum-val" id="delivery-fee-display">$3.00</span></div>
+          <hr class="sum-divider">
+          <div class="sum-row total-row"><span>Total</span><span class="sum-val" id="total">$0.00</span></div>
         </div>
-        <div class="form-g">
-          <label class="form-lbl">Phone *</label>
-          <input type="tel" class="form-in" id="f-phone" placeholder="+1 (416) 555-1234">
+
+        <!-- Progress steps -->
+        <div class="checkout-steps">
+          <div class="step-dot done">✓</div>
+          <div class="step-line done"></div>
+          <div class="step-dot active">2</div>
+          <div class="step-line"></div>
+          <div class="step-dot pending">3</div>
         </div>
-        <div class="form-g">
-          <label class="form-lbl">Email <span style="font-weight:400;text-transform:none;letter-spacing:0">(for order confirmation)</span></label>
-          <input type="email" class="form-in" id="f-email" placeholder="you@email.com">
+
+        <!-- Delivery details form -->
+        <div class="order-form">
+          <div class="of-title">📍 Delivery Details</div>
+          <div class="form-row-2">
+            <div class="form-g">
+              <label class="form-lbl">Name <span class="req">*</span></label>
+              <input type="text" class="form-in" id="f-name" placeholder="Your name">
+            </div>
+            <div class="form-g">
+              <label class="form-lbl">Phone <span class="req">*</span></label>
+              <input type="tel" class="form-in" id="f-phone" placeholder="+1 (416) 555-1234">
+            </div>
+          </div>
+          <div class="form-g">
+            <label class="form-lbl">Email <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:.66rem">(confirmation)</span></label>
+            <input type="email" class="form-in" id="f-email" placeholder="you@email.com">
+          </div>
+          <div class="form-g">
+            <label class="form-lbl">Delivery Address <span class="req">*</span></label>
+            <input type="text" class="form-in" id="f-addr" placeholder="House no., street, area">
+          </div>
+          <div class="form-g">
+            <label class="form-lbl">Special Instructions</label>
+            <input type="text" class="form-in" id="f-notes" placeholder="Less spicy, extra sauce…">
+          </div>
         </div>
-        <div class="form-g">
-          <label class="form-lbl">Delivery Address *</label>
-          <input type="text" class="form-in" id="f-addr" placeholder="House no., street, area">
-        </div>
-        <div class="form-g">
-          <label class="form-lbl">Special Instructions</label>
-          <input type="text" class="form-in" id="f-notes" placeholder="Less spicy, no onion…">
-        </div>
-        <button class="submit-btn" id="submit-btn" onclick="placeOrder()">Place Order 🍴</button>
-        <div style="text-align:center;margin-top:.6rem;font-size:.72rem;color:var(--muted)">
-          Already ordered? <button onclick="openModifyModal()" style="background:none;border:none;color:var(--saffron);font-size:.72rem;font-weight:700;cursor:pointer;padding:0;font-family:var(--font-b)">Track / Modify Order →</button>
+
+        <!-- CTA -->
+        <div class="checkout-cta">
+          <button class="submit-btn" id="submit-btn" onclick="placeOrder()">
+            <span>Place Order</span>
+            <span id="submit-total-badge" class="submit-btn-sub"></span>
+            <span>🍴</span>
+          </button>
+          <div class="secure-note">🔒 Your information is secure</div>
+          <div class="track-link">Already ordered? <button onclick="openModifyModal()">Track / Modify →</button></div>
         </div>
       </div>
     </div>
@@ -985,11 +1101,17 @@ create table if not exists menu_items (
   quantities  text,
   updated_at  timestamptz default now()
 );
-alter table menu_items enable row level security;
-create policy "menu select" on menu_items for select using (true);
-create policy "menu insert" on menu_items for insert with check (true);
-create policy "menu update" on menu_items for update using (true);
-create policy "menu delete" on menu_items for delete using (true);</pre>
+-- App settings table (syncs all admin settings across devices)
+create table if not exists app_settings (
+  key   text primary key,
+  value text,
+  updated_at timestamptz default now()
+);
+alter table app_settings enable row level security;
+create policy "settings select" on app_settings for select using (true);
+create policy "settings insert" on app_settings for insert with check (true);
+create policy "settings update" on app_settings for update using (true);
+create policy "settings delete" on app_settings for delete using (true);</pre>
               <button class="btn btn-ghost btn-sm" style="margin-top:.4rem" onclick="navigator.clipboard.writeText(document.getElementById('supabase-sql-block').textContent).then(()=>showAdmToast('📋 SQL copied!','gr'))">📋 Copy SQL</button>
             </details>
             <div class="fg"><label>Project URL</label><input type="url" class="adm-in" id="set-sb-url" placeholder="https://xxxx.supabase.co"></div>
@@ -1235,17 +1357,8 @@ if (!menuItems) {
 }
 
 /* Load saved settings into admin inputs */
-if (settings.sheetsUrl) {
-  document.getElementById('set-sheets').value = settings.sheetsUrl;
-}
-if (settings.supabaseUrl) document.getElementById('set-sb-url').value = settings.supabaseUrl;
-if (settings.supabaseKey) document.getElementById('set-sb-key').value = settings.supabaseKey;
-if (settings.unsplashKey) document.getElementById('set-ukey').value = settings.unsplashKey;
-if (settings.deliveryFee !== undefined) document.getElementById('set-dfee').value = settings.deliveryFee;
-if (settings.ejsPublicKey)   document.getElementById('set-ejs-pubkey').value    = settings.ejsPublicKey;
-if (settings.ejsServiceId)   document.getElementById('set-ejs-service').value   = settings.ejsServiceId;
-if (settings.ejsTemplateId)  document.getElementById('set-ejs-template').value  = settings.ejsTemplateId;
-if (settings.ejsRestoEmail)  document.getElementById('set-ejs-restoemail').value = settings.ejsRestoEmail;
+/* Apply saved settings to admin inputs */
+applySettingsToUI();
 
 // Init EmailJS if configured
 initEmailJS();
@@ -1305,8 +1418,72 @@ function saveMenuLocal() {
   localStorage.setItem(MENU_KEY, JSON.stringify(menuItems));
 }
 
-// Save settings locally
-function saveSettings() { localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings)); }
+// Save settings locally (fast, always)
+function saveSettingsLocal() { localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings)); }
+
+// Save ALL settings to Supabase (one row per key)
+async function saveSettingsToCloud() {
+  if (!hasSupabase()) return;
+  // Skip credentials themselves (bootstrapped from localStorage)
+  const keys = Object.keys(settings).filter(k => k !== 'supabaseUrl' && k !== 'supabaseKey');
+  if (!keys.length) return;
+  const rows = keys.map(k => ({
+    key: k,
+    value: typeof settings[k] === 'object' ? JSON.stringify(settings[k]) : String(settings[k] ?? ''),
+    updated_at: new Date().toISOString()
+  }));
+  try {
+    await fetch(sbUrl('app_settings') + '?on_conflict=key', {
+      method: 'POST',
+      headers: { ...sbHeaders(), 'Prefer': 'resolution=merge-duplicates,return=minimal' },
+      body: JSON.stringify(rows)
+    });
+  } catch(e) { console.warn('Settings cloud save error:', e); }
+}
+
+// Load settings from Supabase (called on page load; merges over localStorage)
+async function loadSettingsFromCloud() {
+  if (!hasSupabase()) return false;
+  try {
+    const res = await fetch(sbUrl('app_settings?select=key,value'), { headers: sbHeaders() });
+    if (!res.ok) return false;
+    const rows = await res.json();
+    if (!rows || !rows.length) return false;
+    rows.forEach(r => {
+      if (r.key === 'supabaseUrl' || r.key === 'supabaseKey') return; // never overwrite credentials
+      try { settings[r.key] = JSON.parse(r.value); } catch(e) { settings[r.key] = r.value; }
+    });
+    saveSettingsLocal();
+    applySettingsToUI();
+    return true;
+  } catch(e) { console.warn('Settings cloud load error:', e); return false; }
+}
+
+// Apply loaded settings values to all admin input fields
+function applySettingsToUI() {
+  const fields = {
+    'set-sb-url':          settings.supabaseUrl,
+    'set-sb-key':          settings.supabaseKey,
+    'set-ukey':            settings.unsplashKey,
+    'set-dfee':            settings.deliveryFee,
+    'set-ejs-pubkey':      settings.ejsPublicKey,
+    'set-ejs-service':     settings.ejsServiceId,
+    'set-ejs-template':    settings.ejsTemplateId,
+    'set-ejs-restoemail':  settings.ejsRestoEmail,
+    'set-sheets':          settings.sheetsUrl,
+    'set-rname':           settings.restaurantName,
+  };
+  Object.entries(fields).forEach(([id, val]) => {
+    const el = document.getElementById(id);
+    if (el && val !== undefined && val !== null) el.value = val;
+  });
+}
+
+// Main saveSettings: save locally + to cloud
+async function saveSettings() {
+  saveSettingsLocal();
+  await saveSettingsToCloud();
+}
 
 // Save a single item to Supabase (upsert)
 async function syncItemToCloud(item) {
@@ -1554,7 +1731,7 @@ function addToCart(name, price, emoji) {
   if (ex) ex.qty++;
   else cart.push({name,price,emoji,qty:1});
   renderCart();
-  showStoreToast(`${emoji} ${name} added`);
+  showStoreToast(`${emoji} ${name} added to basket`);
 }
 
 function changeQty(name, d) {
@@ -1565,49 +1742,80 @@ function changeQty(name, d) {
   renderCart();
 }
 
+function removeFromCart(name) {
+  cart = cart.filter(i=>i.name!==name);
+  renderCart();
+}
+
 function getDeliveryFee(subtotal) {
-  return subtotal >= 25 ? 0 : 3;
+  const fee = parseFloat(settings.deliveryFee);
+  const base = isNaN(fee) ? 3 : fee;
+  return subtotal >= 25 ? 0 : base;
 }
 
 function renderCart() {
   const container = document.getElementById('cart-items');
-  const empty = document.getElementById('cart-empty');
-  const summary = document.getElementById('order-summary');
+  const empty     = document.getElementById('cart-empty');
+  const summary   = document.getElementById('order-summary');
+  const totalQty  = cart.reduce((s,i)=>s+i.qty, 0);
 
-  document.getElementById('cart-count').textContent = cart.reduce((s,i)=>s+i.qty,0);
+  // Nav badge
+  document.getElementById('cart-count').textContent = totalQty;
+  // Sidebar badge
+  const badge = document.getElementById('sb-count-badge');
+  if (badge) badge.textContent = totalQty + (totalQty===1?' item':' items');
 
   if (cart.length === 0) {
-    empty.style.display='block'; summary.style.display='none';
+    empty.style.display = 'block';
+    summary.style.display = 'none';
     container.querySelectorAll('.cart-row').forEach(e=>e.remove());
     return;
   }
-  empty.style.display='none'; summary.style.display='block';
+  empty.style.display = 'none';
+  summary.style.display = 'block';
   container.querySelectorAll('.cart-row').forEach(e=>e.remove());
 
   cart.forEach(item => {
     const div = document.createElement('div');
     div.className = 'cart-row';
+    const safeName = item.name.replace(/'/g,"\\'");
     div.innerHTML = `
       <div class="cr-emoji">${item.emoji}</div>
       <div class="cr-info">
         <div class="cr-name">${esc(item.name)}</div>
-        <div class="cr-price">$${(item.price*item.qty)}</div>
+        <div class="cr-unit-price">$${item.price.toFixed(2)} each</div>
       </div>
-      <div class="cr-qty">
-        <button class="qty-btn" onclick="changeQty('${item.name.replace(/'/g,"\\'")}',-1)">−</button>
-        <span class="qty-num">${item.qty}</span>
-        <button class="qty-btn" onclick="changeQty('${item.name.replace(/'/g,"\\'")}',1)">+</button>
+      <div class="cr-right">
+        <div class="cr-line-price">$${(item.price*item.qty).toFixed(2)}</div>
+        <div class="cr-qty">
+          <button class="qty-btn" onclick="changeQty('${safeName}',-1)" title="Decrease">−</button>
+          <span class="qty-num">${item.qty}</span>
+          <button class="qty-btn" onclick="changeQty('${safeName}',1)" title="Increase">+</button>
+          <button class="cr-remove" onclick="removeFromCart('${safeName}')" title="Remove">✕</button>
+        </div>
       </div>`;
     container.insertBefore(div, empty);
   });
 
-  const sub = cart.reduce((s,i)=>s+i.price*i.qty,0);
+  const sub = cart.reduce((s,i)=>s+i.price*i.qty, 0);
   const fee = getDeliveryFee(sub);
+  const total = sub + fee;
+
   document.getElementById('subtotal').textContent = '$'+sub.toFixed(2);
-  document.getElementById('delivery-fee-display').textContent = fee === 0 ? 'FREE' : '$'+fee.toFixed(2);
-  const freeNote = document.getElementById('free-delivery-note');
-  if (freeNote) freeNote.style.display = fee === 0 ? 'flex' : 'none';
-  document.getElementById('total').textContent = '$'+(sub+fee).toFixed(2);
+  document.getElementById('delivery-fee-display').textContent = fee===0 ? 'FREE 🎉' : '$'+fee.toFixed(2);
+  document.getElementById('total').textContent = '$'+total.toFixed(2);
+
+  // Free delivery chip
+  const chipWrap = document.getElementById('free-del-chip-wrap');
+  if (chipWrap) {
+    chipWrap.innerHTML = fee===0
+      ? '<div class="free-del-chip">🎉 Free delivery unlocked!</div>'
+      : (sub>0 ? '<div class="free-del-chip" style="background:rgba(226,55,68,.06);color:var(--muted);border-color:var(--border)">Add $'+(25-sub).toFixed(2)+' more for free delivery</div>' : '');
+  }
+
+  // Update submit button with total
+  const badge2 = document.getElementById('submit-total-badge');
+  if (badge2) badge2.textContent = '— $'+total.toFixed(2);
 }
 
 function scrollToCart() {
@@ -2304,36 +2512,36 @@ function dlExport() {
 /* ═══════════════════════════════════════
    ADMIN – SETTINGS
 ═══════════════════════════════════════ */
-function saveSetting(key, inputId) {
+async function saveSetting(key, inputId) {
   settings[key]=document.getElementById(inputId).value.trim();
-  saveSettings(); showAdmToast('✅ Saved!','gr');
+  await saveSettings(); showAdmToast('✅ Saved!','gr');
 }
 
-function saveRestaurantSettings() {
+async function saveRestaurantSettings() {
   settings.restaurantName=document.getElementById('set-rname').value.trim();
   settings.deliveryFee=document.getElementById('set-dfee').value;
-  saveSettings(); showAdmToast('✅ Saved!','gr');
+  await saveSettings(); showAdmToast('✅ Saved!','gr');
 }
 
-function saveAdminPassword() {
+async function saveAdminPassword() {
   const np = document.getElementById('set-newpw').value;
   const cp = document.getElementById('set-confpw').value;
   if (!np) { showAdmToast('⚠️ Enter a new password','rd'); return; }
   if (np !== cp) { showAdmToast('⚠️ Passwords do not match','rd'); return; }
   if (np.length < 4) { showAdmToast('⚠️ Password too short (min 4 chars)','rd'); return; }
   settings.adminPassword = np;
-  saveSettings();
+  await saveSettings();
   document.getElementById('set-newpw').value='';
   document.getElementById('set-confpw').value='';
   showAdmToast('🔐 Password updated!','gr');
 }
 
-function saveEmailSettings() {
+async function saveEmailSettings() {
   settings.ejsPublicKey  = document.getElementById('set-ejs-pubkey').value.trim();
   settings.ejsServiceId  = document.getElementById('set-ejs-service').value.trim();
   settings.ejsTemplateId = document.getElementById('set-ejs-template').value.trim();
   settings.ejsRestoEmail = document.getElementById('set-ejs-restoemail').value.trim();
-  saveSettings();
+  await saveSettings();
   _ejsInitialised = false; // force re-init on next use
   initEmailJS();
   showAdmToast('✅ Email settings saved!','gr');
@@ -2409,20 +2617,28 @@ function hasSupabase() {
 async function saveSupabaseSettings() {
   settings.supabaseUrl = document.getElementById('set-sb-url').value.trim();
   settings.supabaseKey = document.getElementById('set-sb-key').value.trim();
-  saveSettings();
+  saveSettingsLocal(); // always save credentials locally (bootstrap)
   showAdmToast('✅ Supabase settings saved!','gr');
-  // Immediately try to load/sync menu with new credentials
   const el = document.getElementById('sb-test-result');
   el.textContent = '⏳ Connecting…'; el.style.color='var(--adm-mute)';
-  const loaded = await loadMenuFromCloud(false);
-  if (loaded) {
-    el.textContent = '✅ Connected & menu synced!'; el.style.color='var(--adm-grn)';
+
+  // Load any existing cloud settings first
+  const settingsLoaded = await loadSettingsFromCloud();
+
+  // Load/sync menu
+  const menuLoaded = await loadMenuFromCloud(false);
+  if (menuLoaded) {
+    el.textContent = '✅ Connected & data synced!'; el.style.color='var(--adm-grn)';
     renderAdmTable();
   } else {
-    // Push local menu to seed cloud
     await syncAllMenuToCloud();
     el.textContent = '✅ Connected & menu uploaded!'; el.style.color='var(--adm-grn)';
   }
+
+  // Push all current settings to cloud (if not already there)
+  if (!settingsLoaded) await saveSettingsToCloud();
+
+  updateSyncBadge();
   startMenuPoll();
 }
 
@@ -2655,17 +2871,26 @@ saveMenuLocal();
 applySessionUI();
 renderStore();
 
-// Load latest menu from Supabase (overrides localStorage if cloud has data)
+// Bootstrap: load menu + settings from Supabase, then start polling
 (async () => {
-  const loaded = await loadMenuFromCloud(false);
-  if (!loaded && menuItems.length) {
-    // No cloud data yet — push local menu up to seed the cloud
-    if (hasSupabase()) {
-      await syncAllMenuToCloud();
-      console.log('✅ Local menu pushed to Supabase as initial seed');
-    }
+  // 1. Load settings from cloud (uses locally-stored Supabase credentials as bootstrap)
+  const settingsLoaded = await loadSettingsFromCloud();
+  if (settingsLoaded) {
+    // Re-apply UI with cloud values (delivery fee etc.)
+    renderCart(); // re-render with correct delivery fee from cloud settings
+  } else if (hasSupabase()) {
+    // Push local settings to seed cloud
+    await saveSettingsToCloud();
   }
-  // Start polling for live updates across devices
+
+  // 2. Load menu from cloud
+  const menuLoaded = await loadMenuFromCloud(false);
+  if (!menuLoaded && menuItems.length && hasSupabase()) {
+    await syncAllMenuToCloud();
+    console.log('✅ Local menu pushed to Supabase as initial seed');
+  }
+
+  // 3. Start polling for live updates
   startMenuPoll();
 })();
 </script>
