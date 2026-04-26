@@ -12,8 +12,7 @@
    BASE RESET & VARIABLES
 ══════════════════════════════════════════════ */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;overflow-x:hidden}
-body{overflow-x:hidden;max-width:100vw}
+html{scroll-behavior:smooth}
 
 :root{
   /* Zomato Sushi Design System — Brand palette */
@@ -62,7 +61,6 @@ body{font-family:var(--font-b);background:var(--cream);color:var(--text);min-hei
   backdrop-filter:blur(12px);
   gap:0.75rem;
   overflow:hidden;
-  width:100%;max-width:100vw;
 }
 .brand-mark{
   font-family:var(--font-d);font-size:1.55rem;font-weight:700;
@@ -145,7 +143,7 @@ body{font-family:var(--font-b);background:var(--cream);color:var(--text);min-hei
 .hero-chips{display:flex;gap:0.45rem;justify-content:center;flex-wrap:wrap}
 .hchip{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.13);color:rgba(255,255,255,0.75);padding:0.3rem 0.9rem;border-radius:20px;font-size:0.72rem;font-weight:500;letter-spacing:0.2px;backdrop-filter:blur(4px)}
 
-.store-main{max-width:1200px;margin:0 auto;padding:2.5rem 1.5rem;display:grid;grid-template-columns:1fr 360px;gap:2rem;align-items:start;width:100%}
+.store-main{max-width:1200px;margin:0 auto;padding:2.5rem 1.5rem;display:grid;grid-template-columns:1fr 360px;gap:2rem;align-items:start}
 
 .cat-tabs{display:flex;gap:0.4rem;margin-bottom:1.4rem;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
 .cat-tabs::-webkit-scrollbar{display:none}
@@ -620,6 +618,8 @@ select.adm-in option{background:var(--adm-card)}
 .adm-toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--adm-card);border:1px solid var(--adm-bord);color:var(--adm-text);padding:.65rem 1.1rem;border-radius:var(--r);font-size:.8rem;font-weight:500;z-index:300;transform:translateY(120%);transition:transform .3s cubic-bezier(.34,1.56,.64,1);display:flex;align-items:center;gap:.45rem;max-width:300px}
 .adm-toast.show{transform:translateY(0)}
 .adm-toast.at-gr{border-color:rgba(61,186,123,.35);background:rgba(61,186,123,.08);color:#3DBA7B}
+@keyframes pulseFetch{0%,100%{box-shadow:0 0 0 0 rgba(155,92,255,.6)}50%{box-shadow:0 0 0 6px rgba(155,92,255,0)}}
+.pulse-fetch{animation:pulseFetch .5s ease 2}
 .adm-toast.at-rd{border-color:rgba(224,85,85,.35);background:rgba(224,85,85,.08);color:var(--adm-red)}
 
 /* ══════════════════════════════════════════════
@@ -750,20 +750,14 @@ select.adm-in option{background:var(--adm-card)}
   .item-desc{font-size:.72rem;-webkit-line-clamp:2;display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden}
   .item-footer{grid-column:2;padding:.45rem .8rem;border-top:1px solid var(--border);border-radius:0 0 var(--r-lg) 0}
 
-  /* Cart & Checkout — full width, no overflow */
-  .store-sidebar{width:100%;max-width:100%;border-radius:var(--r);overflow:hidden}
+  /* Cart */
   .sb-head{padding:.8rem 1rem}
   .cart-items{max-height:180px}
-  .order-form{padding:.75rem .85rem}
-  .checkout-cta{padding:.1rem .85rem .9rem}
-  .form-row-2{grid-template-columns:1fr} /* stack name/phone on tiny screens */
-  .form-in{font-size:.8rem}
-  .checkout-steps{padding:.7rem .85rem .5rem}
+  .order-form{padding:.85rem 1rem}
   .cat-tab{padding:.3rem .72rem;font-size:.7rem}
 
   /* Modals */
   .success-card{border-radius:16px;padding:2rem 1.4rem}
-  .mod-card{width:100%;max-width:100vw;border-radius:16px 16px 0 0}
   .mod-body{padding:1rem}
 
   /* Admin */
@@ -858,7 +852,7 @@ select.adm-in option{background:var(--adm-card)}
   <div class="nav-right">
     <div class="live-badge" id="live-badge-el" style="display:none"><span class="live-dot"></span>Live</div>
     <button class="track-btn" onclick="openModifyModal()">🔍 Track Order</button>
-    <button class="cart-pill" id="cart-pill" onclick="switchMode('store');scrollToCart()">
+    <button class="cart-pill" id="cart-pill" onclick="openCartModal()">
       🛒 Cart <span class="cart-bubble" id="cart-count">0</span>
     </button>
     <button id="btn-login" class="nav-login-btn" onclick="showLoginModal()">🔑 Login</button>
@@ -901,8 +895,14 @@ select.adm-in option{background:var(--adm-card)}
       </div>
     </div>
 
-    <!-- Cart sidebar -->
-    <div class="store-sidebar" id="cart-sidebar">
+    <!-- Cart sidebar (modal overlay — opens only when cart pill clicked) -->
+  </div><!-- /store-main -->
+</div><!-- /view-store -->
+
+<!-- Cart Modal Overlay -->
+<div id="cart-modal-overlay" onclick="closeCartModal(event)" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:500;backdrop-filter:blur(3px);align-items:flex-start;justify-content:flex-end">
+  <div id="cart-sidebar" class="store-sidebar" onclick="event.stopPropagation()" style="height:100vh;overflow-y:auto;width:min(420px,100vw);border-radius:0;border-right:none;border-top:none;border-bottom:none;margin:0;animation:slideInCart .25s ease-out">
+    <style>@keyframes slideInCart{from{transform:translateX(100%)}to{transform:translateX(0)}}</style>
       <!-- Basket header -->
       <div class="sb-head">
         <h2>🛒 Your Basket</h2>
@@ -975,9 +975,8 @@ select.adm-in option{background:var(--adm-card)}
           <div class="track-link">Already ordered? <button onclick="openModifyModal()">Track / Modify →</button></div>
         </div>
       </div>
-    </div>
-  </div>
-</div>
+  </div><!-- /cart-sidebar inner -->
+</div><!-- /cart-modal-overlay -->
 
 <!-- ════════════════════════════════════════
      ADMIN VIEW
@@ -1070,27 +1069,11 @@ select.adm-in option{background:var(--adm-card)}
         <div style="max-width:520px">
           <h2 style="font-family:var(--font-h);font-size:1.2rem;color:var(--adm-text);margin-bottom:1.25rem">Settings</h2>
           <div class="set-card">
-            <h3>🟢 Supabase — Cross-Device Sync</h3>
-            <p style="color:var(--adm-mute);font-size:.78rem;margin-bottom:.6rem">
-              Free at <a href="https://supabase.com" target="_blank" style="color:var(--adm-blue)">supabase.com</a>.
-              Syncs your menu, settings &amp; orders across <strong>all devices</strong> — including customers' phones.
+            <h3>🟢 Supabase (Recommended)</h3>
+            <p style="color:var(--adm-mute);font-size:.78rem;margin-bottom:.75rem">
+              Free at <a href="https://supabase.com" target="_blank" style="color:var(--adm-blue)">supabase.com</a>. 
+              Create a project → run the SQL below → paste your URL and anon key.
             </p>
-
-            <!-- Deployment guide -->
-            <div id="deploy-guide" style="background:rgba(74,158,255,.07);border:1px solid rgba(74,158,255,.25);border-radius:10px;padding:.85rem 1rem;margin-bottom:.8rem;font-size:.76rem;color:var(--adm-text)">
-              <div style="font-weight:700;color:var(--adm-blue);margin-bottom:.5rem">🚀 One-Time Setup for Cross-Device Sync</div>
-              <div style="display:flex;flex-direction:column;gap:.45rem">
-                <div><span style="background:var(--adm-acc);color:white;border-radius:50%;width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:800;margin-right:.4rem">1</span>Create a free Supabase project at supabase.com</div>
-                <div><span style="background:var(--adm-acc);color:white;border-radius:50%;width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:800;margin-right:.4rem">2</span>Run the SQL below in Supabase SQL Editor</div>
-                <div><span style="background:var(--adm-acc);color:white;border-radius:50%;width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:800;margin-right:.4rem">3</span>Paste your URL &amp; key below → Save</div>
-                <div><span style="background:var(--adm-acc);color:white;border-radius:50%;width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:800;margin-right:.4rem">4</span><strong>Copy the code snippet below</strong> → paste into <code style="background:var(--adm-surf);padding:.1rem .3rem;border-radius:4px">index.html</code> lines 1–2 → push to GitHub</div>
-              </div>
-              <div style="margin-top:.65rem;background:var(--adm-bg);border:1px solid var(--adm-bord);border-radius:8px;padding:.6rem;font-family:monospace;font-size:.72rem;color:#A0F0C0" id="credentials-snippet">
-                Loading your credentials…
-              </div>
-              <button class="btn btn-ghost btn-sm" style="margin-top:.4rem" onclick="copyCredentialsSnippet()">📋 Copy Code Snippet</button>
-            </div>
-
             <details style="margin-bottom:.75rem">
               <summary style="cursor:pointer;font-size:.75rem;color:var(--adm-blue);outline:none">Show setup SQL ▸</summary>
               <pre id="supabase-sql-block" style="background:var(--adm-bg);border:1px solid var(--adm-bord);border-radius:8px;padding:.75rem;font-size:.7rem;color:#A0F0C0;margin-top:.5rem;overflow-x:auto;white-space:pre-wrap">create table if not exists orders (
@@ -1125,12 +1108,6 @@ create table if not exists menu_items (
   quantities  text,
   updated_at  timestamptz default now()
 );
-alter table menu_items enable row level security;
-create policy "menu select" on menu_items for select using (true);
-create policy "menu insert" on menu_items for insert with check (true);
-create policy "menu update" on menu_items for update using (true);
-create policy "menu delete" on menu_items for delete using (true);
-
 -- App settings table (syncs all admin settings across devices)
 create table if not exists app_settings (
   key   text primary key,
@@ -1144,11 +1121,11 @@ create policy "settings update" on app_settings for update using (true);
 create policy "settings delete" on app_settings for delete using (true);</pre>
               <button class="btn btn-ghost btn-sm" style="margin-top:.4rem" onclick="navigator.clipboard.writeText(document.getElementById('supabase-sql-block').textContent).then(()=>showAdmToast('📋 SQL copied!','gr'))">📋 Copy SQL</button>
             </details>
-            <div class="fg"><label>Project URL</label><input type="url" class="adm-in" id="set-sb-url" placeholder="https://xxxx.supabase.co" oninput="updateCredentialsSnippet()"></div>
-            <div class="fg" style="margin-top:.5rem"><label>Anon / Public Key</label><input type="text" class="adm-in" id="set-sb-key" placeholder="eyJh…" oninput="updateCredentialsSnippet()"></div>
+            <div class="fg"><label>Project URL</label><input type="url" class="adm-in" id="set-sb-url" placeholder="https://xxxx.supabase.co"></div>
+            <div class="fg" style="margin-top:.5rem"><label>Anon / Public Key</label><input type="text" class="adm-in" id="set-sb-key" placeholder="eyJh…"></div>
             <div style="display:flex;gap:.5rem;margin-top:.6rem;align-items:center">
-              <button class="btn btn-grn btn-sm" onclick="saveSupabaseSettings()">Save &amp; Sync</button>
-              <button class="btn btn-ghost btn-sm" onclick="testSupabaseConnection()">🔌 Test</button>
+              <button class="btn btn-grn btn-sm" onclick="saveSupabaseSettings()">Save</button>
+              <button class="btn btn-ghost btn-sm" onclick="testSupabaseConnection()">🔌 Test connection</button>
               <span id="sb-test-result" style="font-size:.75rem;color:var(--adm-mute)"></span>
             </div>
           </div>
@@ -1238,7 +1215,7 @@ create policy "settings delete" on app_settings for delete using (true);</pre>
 
     <div class="fsec">
       <div class="fsec-title">Dish Details</div>
-      <div class="fg"><label>Dish Name *</label><input type="text" class="adm-in" id="d-name" placeholder="e.g. Dal Makhani"></div>
+      <div class="fg"><label>Dish Name *</label><input type="text" class="adm-in" id="d-name" placeholder="e.g. Dal Makhani" onblur="onDishNameBlur(this.value)"></div>
       <div class="frow">
         <div class="fg">
           <label>Category *</label>
@@ -1258,7 +1235,19 @@ create policy "settings delete" on app_settings for delete using (true);</pre>
         <div class="fg"><label>Emoji</label><input type="text" class="adm-in" id="d-emoji" placeholder="🍛" maxlength="2"></div>
         <div class="fg"><label>Status</label><select class="adm-in" id="d-status"><option value="active">Active</option><option value="inactive">Inactive</option></select></div>
       </div>
-      <div class="fg"><label>Description</label><textarea class="adm-in" id="d-desc" placeholder="Short, mouth-watering description…"></textarea></div>
+      <div class="fg">
+        <label style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.28rem">
+          <span style="font-size:.7rem;font-weight:600;color:var(--adm-mute);text-transform:uppercase;letter-spacing:.5px">Description</span>
+          <button type="button" id="fetch-desc-btn" onclick="fetchDishDescription()" style="display:inline-flex;align-items:center;gap:.3rem;background:linear-gradient(135deg,#5b5eff,#9b5cff);color:white;border:none;border-radius:6px;padding:.22rem .6rem;font-size:.68rem;font-weight:700;cursor:pointer;font-family:var(--font-b);transition:opacity .15s;white-space:nowrap">
+            ✨ Fetch from Web
+          </button>
+        </label>
+        <div style="position:relative">
+          <textarea class="adm-in" id="d-desc" placeholder="Short, mouth-watering description… or click ✨ Fetch from Web" style="padding-right:2.2rem"></textarea>
+          <div id="desc-spinner" style="display:none;position:absolute;top:.55rem;right:.6rem;width:16px;height:16px;border:2.5px solid #9b5cff44;border-top-color:#9b5cff;border-radius:50%;animation:descSpin .7s linear infinite"></div>
+        </div>
+        <style>@keyframes descSpin{to{transform:rotate(360deg)}}</style>
+      </div>
     </div>
 
     <div class="fsec">
@@ -1358,11 +1347,9 @@ create policy "settings delete" on app_settings for delete using (true);</pre>
    SHARED DATA STORE
 ═══════════════════════════════════════ */
 
-/* ──────────────────────────────────────────────────────────────
-   🔑 SUPABASE CREDENTIALS  ← Fill these in ONCE before deploying
-   Get them from: Supabase Dashboard → Settings → API
-   After filling in, push to GitHub — every device will sync!
-   ────────────────────────────────────────────────────────────── */
+/* ──────────────────────────────────────────────────────────────────
+   🔑 SUPABASE CREDENTIALS  ← fill once, push to GitHub, all devices sync
+   ────────────────────────────────────────────────────────────────── */
 const SUPABASE_URL = 'https://qwttrwwtarragfbzenoe.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_BNdgX1eqFq6LGmGDNf7Eyw_FXts7iZy';
 
@@ -1376,21 +1363,13 @@ let editingId = null;
 let selectedImg = '';
 let admFilter = 'all';
 
-/* Merge hardcoded credentials with localStorage so both paths work:
-   - Deployed site: uses SUPABASE_URL/KEY constants (works on all devices)
-   - Local dev / admin entry: uses localStorage (backwards compatible)
-*/
+/* Bootstrap: hardcoded credentials override localStorage so every visitor syncs */
 (function bootstrapCredentials() {
   if (SUPABASE_URL && SUPABASE_KEY) {
-    // Hardcoded credentials take priority — always use them
     settings.supabaseUrl = SUPABASE_URL;
     settings.supabaseKey = SUPABASE_KEY;
     localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
-  } else if (!settings.supabaseUrl || !settings.supabaseKey) {
-    // No credentials at all — will work in local-only mode
-    console.info('ℹ️ No Supabase credentials. Fill SUPABASE_URL/KEY in the code, or enter them in Admin → Settings.');
   }
-  // If only localStorage has them (admin entered manually), keep using those
 })();
 
 /* Default seed menu if empty */
@@ -1533,31 +1512,6 @@ function applySettingsToUI() {
     const el = document.getElementById(id);
     if (el && val !== undefined && val !== null) el.value = val;
   });
-  updateCredentialsSnippet();
-}
-
-// Show live code snippet so admin can copy-paste into index.html for GitHub deploy
-function updateCredentialsSnippet() {
-  const snippet = document.getElementById('credentials-snippet');
-  if (!snippet) return;
-  const url = (document.getElementById('set-sb-url') || {}).value || settings.supabaseUrl || '';
-  const key = (document.getElementById('set-sb-key') || {}).value || settings.supabaseKey || '';
-  if (!url || !key) {
-    snippet.textContent = '// Enter your URL & key above, then copy this snippet ↓';
-    snippet.style.color = '#888';
-    return;
-  }
-  snippet.style.color = '#A0F0C0';
-  snippet.textContent =
-    `const SUPABASE_URL = '${url}';\nconst SUPABASE_KEY = '${key}';`;
-}
-
-function copyCredentialsSnippet() {
-  const url = (document.getElementById('set-sb-url') || {}).value || settings.supabaseUrl || '';
-  const key = (document.getElementById('set-sb-key') || {}).value || settings.supabaseKey || '';
-  if (!url || !key) { showAdmToast('⚠️ Enter URL & key first', 'rd'); return; }
-  const text = `const SUPABASE_URL = '${url}';\nconst SUPABASE_KEY = '${key}';`;
-  navigator.clipboard.writeText(text).then(() => showAdmToast('📋 Snippet copied! Paste it into index.html lines 1-2 and push to GitHub', 'gr'));
 }
 
 // Main saveSettings: save locally + to cloud
@@ -1646,46 +1600,20 @@ async function loadMenuFromCloud(silent) {
 
 // Poll every 30s — keeps storefronts on all devices in sync
 let _pollTimer = null;
-let _lastSettingsHash = '';
 function startMenuPoll() {
   if (_pollTimer) clearInterval(_pollTimer);
   updateSyncBadge();
   if (!hasSupabase()) return;
   _pollTimer = setInterval(async () => {
-    // Poll menu
-    const menuChanged = await loadMenuFromCloud(true);
-    if (menuChanged) {
+    const changed = await loadMenuFromCloud(true);
+    if (changed) {
       renderStore();
-      if (document.getElementById('adm-panel-items') &&
-          document.getElementById('adm-panel-items').classList.contains('active')) {
+      // If admin panel is open, refresh table too
+      if (document.getElementById('adm-panel-items').classList.contains('active')) {
         renderAdmTable();
       }
     }
-    // Poll settings (delivery fee, restaurant name, etc.)
-    await pollSettingsFromCloud();
-  }, 30000);
-}
-
-// Lightweight settings poll — only re-renders cart if delivery fee changed
-async function pollSettingsFromCloud() {
-  if (!hasSupabase()) return;
-  try {
-    const res = await fetch(sbUrl('app_settings?select=key,value'), { headers: sbHeaders() });
-    if (!res.ok) return;
-    const rows = await res.json();
-    if (!rows || !rows.length) return;
-    const hash = JSON.stringify(rows);
-    if (hash === _lastSettingsHash) return; // nothing changed
-    _lastSettingsHash = hash;
-    const oldFee = settings.deliveryFee;
-    rows.forEach(r => {
-      if (r.key === 'supabaseUrl' || r.key === 'supabaseKey') return;
-      try { settings[r.key] = JSON.parse(r.value); } catch(e) { settings[r.key] = r.value; }
-    });
-    saveSettingsLocal();
-    // Re-render cart if delivery fee changed
-    if (settings.deliveryFee !== oldFee) renderCart();
-  } catch(e) { /* silent */ }
+  }, 30000); // 30 seconds
 }
 
 // Update the admin topbar sync badge
@@ -1731,6 +1659,11 @@ const TAG_LABELS  = { veg:'🌿 Veg', spicy:'🌶 Spicy', new:'✨ New', pop:'�
    MODE SWITCHING
 ═══════════════════════════════════════ */
 function switchMode(mode) {
+  // Close cart modal if open
+  const overlay = document.getElementById('cart-modal-overlay');
+  if (overlay) { overlay.style.display = 'none'; }
+  document.body.style.overflow = '';
+
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
   document.getElementById('view-'+mode).classList.add('active');
@@ -1927,6 +1860,17 @@ function renderCart() {
 
 function scrollToCart() {
   document.getElementById('cart-sidebar').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function openCartModal() {
+  const el = document.getElementById('cart-modal-overlay');
+  if (el) { el.style.display = 'flex'; document.body.style.overflow = 'hidden'; }
+}
+
+function closeCartModal(e) {
+  if (e && e.target && e.target.id !== 'cart-modal-overlay') return;
+  const el = document.getElementById('cart-modal-overlay');
+  if (el) { el.style.display = 'none'; document.body.style.overflow = ''; }
 }
 
 /* Config */
@@ -2452,8 +2396,121 @@ function addQtyFromInput() {
 }
 
 /* ═══════════════════════════════════════
-   ADMIN – IMAGE TAB SWITCHER
+   ADMIN – AI DESCRIPTION FETCH
 ═══════════════════════════════════════ */
+async function fetchDishDescription() {
+  const nameEl = document.getElementById('d-name');
+  const descEl = document.getElementById('d-desc');
+  const btn    = document.getElementById('fetch-desc-btn');
+  const spin   = document.getElementById('desc-spinner');
+  const name   = nameEl.value.trim();
+
+  if (!name) {
+    showAdmToast('⚠️ Enter a dish name first', 'rd');
+    nameEl.focus();
+    return;
+  }
+
+  btn.disabled = true;
+  btn.style.opacity = '.5';
+  spin.style.display = 'block';
+  descEl.placeholder = 'Searching web…';
+
+  try {
+    // Wikipedia REST API — always CORS-open, returns plain text extract
+    const query = encodeURIComponent(name + ' dish food');
+    const url = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(name)}`;
+    const urlFood = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(name + ' (food)')}`;
+
+    let extract = '';
+
+    // Try exact match first, then "(food)" variant
+    for (const endpoint of [url, urlFood]) {
+      try {
+        const res = await fetch(endpoint, { headers: { Accept: 'application/json' } });
+        if (res.ok) {
+          const data = await res.json();
+          if (data.extract && data.type !== 'disambiguation') {
+            extract = data.extract;
+            break;
+          }
+        }
+      } catch(e) { /* try next */ }
+    }
+
+    // Fallback: Wikipedia search API
+    if (!extract) {
+      const searchUrl = `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(name + ' Indian food dish')}&srlimit=1&format=json&origin=*`;
+      const sRes = await fetch(searchUrl);
+      const sData = await sRes.json();
+      const hit = sData?.query?.search?.[0];
+      if (hit) {
+        const pageTitle = encodeURIComponent(hit.title);
+        const sumRes = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${pageTitle}`, { headers: { Accept: 'application/json' } });
+        if (sumRes.ok) {
+          const sumData = await sumRes.json();
+          if (sumData.extract && sumData.type !== 'disambiguation') {
+            extract = sumData.extract;
+          }
+        }
+      }
+    }
+
+    if (extract) {
+      // Trim to 1-2 punchy sentences, max ~200 chars
+      const sentences = extract.replace(/\s+/g, ' ').split(/(?<=[.!?])\s+/);
+      let desc = sentences[0] || '';
+      if (desc.length < 60 && sentences[1]) desc += ' ' + sentences[1];
+      if (desc.length > 200) desc = desc.slice(0, 197) + '…';
+      desc = desc.trim();
+
+      descEl.value = desc;
+      descEl.style.borderColor = '#9b5cff';
+      setTimeout(() => { descEl.style.borderColor = ''; }, 2000);
+      showAdmToast('✨ Description fetched!', 'gr');
+
+      // Auto-fill emoji if empty
+      const emojiEl = document.getElementById('d-emoji');
+      if (!emojiEl.value) {
+        const emojiMap = {
+          biryani:'🍚', rice:'🍚', paratha:'🫓', naan:'🫓', bread:'🫓', roti:'🫓',
+          curry:'🍛', dal:'🫕', dhal:'🫕', lentil:'🫕', paneer:'🟡', chicken:'🍗',
+          mutton:'🍖', lamb:'🍖', fish:'🐟', prawn:'🦐', shrimp:'🦐', samosa:'🥟',
+          pakora:'🧆', soup:'🍲', salad:'🥗', dessert:'🍮', halwa:'🍮', kheer:'🍮',
+          ladoo:'🟤', laddu:'🟤', mithai:'🍬', sweet:'🍬', chai:'☕', lassi:'🥛',
+          juice:'🧃', coffee:'☕', tea:'🍵', idli:'🫓', dosa:'🫓', uttapam:'🫓',
+          vada:'🧆', poha:'🍽️', upma:'🍽️', puri:'🫓', bhature:'🫓',
+        };
+        const lower = name.toLowerCase();
+        for (const [key, em] of Object.entries(emojiMap)) {
+          if (lower.includes(key)) { emojiEl.value = em; break; }
+        }
+      }
+    } else {
+      showAdmToast('⚠️ Not found — write your own description!', '');
+    }
+  } catch(err) {
+    console.error('Description fetch error:', err);
+    showAdmToast('❌ Fetch failed — check connection', 'rd');
+  } finally {
+    btn.disabled = false;
+    btn.style.opacity = '1';
+    spin.style.display = 'none';
+    descEl.placeholder = 'Short, mouth-watering description…';
+  }
+}
+
+
+/* Auto-offer to fetch description when name is typed and desc is empty */
+function onDishNameBlur(name) {
+  const descEl = document.getElementById('d-desc');
+  if (name.trim() && !descEl.value.trim()) {
+    const btn = document.getElementById('fetch-desc-btn');
+    btn.classList.add('pulse-fetch');
+    setTimeout(() => btn.classList.remove('pulse-fetch'), 1500);
+  }
+}
+
 function setImgTab(tab) {
   ['upload','search','url'].forEach(t => {
     document.getElementById('ipanel-'+t).style.display = t===tab ? '' : 'none';
