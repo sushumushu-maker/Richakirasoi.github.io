@@ -6,7 +6,6 @@
 <title>Richa Ki Rasoi — Home Kitchen Delivery</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;0,800;1,700&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 <style>
 /* ══════════════════════════════════════════════
    BASE RESET & VARIABLES
@@ -324,36 +323,12 @@ body{font-family:var(--font-b);background:var(--cream);color:var(--text);min-hei
   display:flex;align-items:center;justify-content:center;gap:.3rem;
   font-size:.68rem;color:var(--muted);margin-top:.55rem;
 }
-.track-link{
-  display:block;text-align:center;font-size:.72rem;
-  color:var(--muted);margin-top:.5rem;
-}
-.track-link button{
-  background:none;border:none;color:var(--saffron);font-size:.72rem;
-  font-weight:700;cursor:pointer;padding:0;font-family:var(--font-b);
-}
 
 
 /* ══════════════════════════════════════════════
    ORDER MODIFY MODAL
 ══════════════════════════════════════════════ */
-.mod-overlay{
-  display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);
-  z-index:600;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(4px);
-}
-.mod-overlay.show{display:flex}
-.mod-card{
-  background:white;border-radius:16px;width:min(520px,100%);max-height:88vh;
-  overflow-y:auto;box-shadow:0 24px 60px rgba(0,0,0,.2);
-  animation:popIn .3s cubic-bezier(.34,1.56,.64,1);
-}
-.mod-header{
-  background:var(--saffron);color:white;padding:1.1rem 1.4rem;
-  display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:1;
-}
-.mod-header h3{font-family:var(--font-h);font-size:1rem;font-weight:700;letter-spacing:-.1px}
 .mod-close{background:rgba(255,255,255,.2);border:none;color:white;width:28px;height:28px;border-radius:6px;cursor:pointer;font-size:.9rem;display:flex;align-items:center;justify-content:center}
-.mod-body{padding:1.4rem}
 .mod-lookup{display:flex;gap:.5rem;margin-bottom:1.1rem}
 .mod-lookup input{flex:1;padding:.55rem .8rem;border:1.5px solid var(--border);border-radius:8px;font-family:var(--font-b);font-size:.85rem;color:var(--text);outline:none;transition:border-color .18s}
 .mod-lookup input:focus{border-color:var(--saffron)}
@@ -384,13 +359,6 @@ body{font-family:var(--font-b);background:var(--cream);color:var(--text);min-hei
 .mod-err.show{display:block}
 .mod-note{font-size:.75rem;color:var(--muted);text-align:center;margin-top:.7rem;line-height:1.5}
 
-/* Track Order button in nav */
-.track-btn{
-  background:transparent;color:rgba(255,255,255,.75);border:1px solid rgba(255,255,255,.2);
-  padding:.38rem .9rem;border-radius:8px;font-family:var(--font-b);font-size:.76rem;font-weight:600;
-  cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:.35rem;
-}
-.track-btn:hover{background:rgba(255,255,255,.1);color:white}
 
 /* ══════════════════════════════════════════════
    SUCCESS CARD — order ID display
@@ -506,6 +474,19 @@ table.adm-tbl{width:100%;border-collapse:collapse}
 .adm-tbl tbody tr:last-child{border-bottom:none}
 .adm-tbl tbody tr:hover{background:rgba(255,255,255,.02)}
 .adm-tbl td{padding:.65rem .9rem;vertical-align:middle;color:var(--adm-mute);font-size:.8rem}
+/* Orders table specifics */
+.ord-row-main{cursor:pointer}
+.ord-row-main:hover td{background:rgba(255,255,255,.025)}
+.ord-row-expand{display:none}
+.ord-row-expand.open{display:table-row}
+.ord-row-expand td{padding:.5rem .9rem .9rem 2.6rem;background:var(--adm-surf);border-top:none}
+.ord-expand-inner{background:var(--adm-bg);border:1px solid var(--adm-bord);border-radius:10px;padding:.75rem 1rem;font-size:.8rem;color:var(--adm-text);line-height:1.7}
+.ord-chevron{display:inline-block;transition:transform .2s;color:var(--adm-mute);font-size:.75rem}
+.ord-chevron.open{transform:rotate(90deg)}
+.ord-status-sel{background:var(--adm-surf);border:1px solid var(--adm-bord2);border-radius:6px;padding:.22rem .45rem;font-size:.7rem;font-family:var(--font-b);font-weight:700;cursor:pointer;outline:none}
+/* Item summary chips */
+.ord-item-chip{display:inline-flex;align-items:center;gap:.35rem;background:var(--adm-card);border:1px solid var(--adm-bord);border-radius:20px;padding:.28rem .75rem;font-size:.75rem;font-weight:700;color:var(--adm-text);white-space:nowrap}
+.ord-item-chip .chip-qty{background:var(--adm-acc);color:white;border-radius:10px;padding:.05rem .45rem;font-size:.68rem;font-weight:800}
 
 .itm-thumb{width:44px;height:33px;border-radius:6px;object-fit:cover;background:var(--adm-surf);border:1px solid var(--adm-bord);display:flex;align-items:center;justify-content:center;font-size:1.1rem;overflow:hidden}
 .itm-thumb img{width:100%;height:100%;object-fit:cover}
@@ -638,7 +619,6 @@ select.adm-in option{background:var(--adm-card)}
   .brand-mark img{height:36px;width:36px}
   .brand-mark .hindi{display:none}
   .mode-tab{padding:.3rem .9rem;font-size:.74rem}
-  .track-btn{padding:.32rem .7rem;font-size:.72rem}
   .store-main{grid-template-columns:1fr 320px;gap:1.5rem;padding:2rem 1.25rem}
   .menu-grid{grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem}
   .hero{padding:2.8rem 1.5rem 2rem}
@@ -658,7 +638,6 @@ select.adm-in option{background:var(--adm-card)}
   .brand-mark .hindi{display:none}
   .mode-tabs{padding:2px;gap:.15rem}
   .mode-tab{padding:.25rem .65rem;font-size:.7rem}
-  .track-btn{display:none}
   .nav-right{gap:.35rem}
   .cart-pill{padding:.35rem .8rem;font-size:.74rem;border-radius:7px}
   .nav-login-btn{padding:.3rem .65rem;font-size:.74rem;border-radius:20px}
@@ -680,8 +659,6 @@ select.adm-in option{background:var(--adm-card)}
   .item-img{height:140px}
 
   /* Modals */
-  .mod-card{border-radius:12px 12px 0 0;width:100%;max-height:92vh;position:fixed;bottom:0;left:0}
-  .mod-overlay{padding:0;align-items:flex-end}
 
   /* Admin */
   .adm-side{display:none}
@@ -696,10 +673,7 @@ select.adm-in option{background:var(--adm-card)}
   .adm-toast{bottom:1rem;right:1rem;max-width:260px;font-size:.75rem}
 }
 
-/* Floating track button — tablet & mobile */
-.mobile-track-btn{display:none}
 @media(max-width:768px){
-  .mobile-track-btn{
     display:flex;
     position:fixed;bottom:1.2rem;right:1.2rem;z-index:190;
     background:var(--saffron);color:white;border:none;
@@ -708,7 +682,6 @@ select.adm-in option{background:var(--adm-card)}
     box-shadow:0 4px 18px rgba(226,55,68,.45);gap:.35rem;align-items:center;
     transition:transform .18s;
   }
-  .mobile-track-btn:active{transform:scale(.95)}
 }
 
 /* ── MOBILE (≤ 480px) ── */
@@ -758,8 +731,7 @@ select.adm-in option{background:var(--adm-card)}
 
   /* Modals */
   .success-card{border-radius:16px;padding:2rem 1.4rem}
-  .mod-body{padding:1rem}
-
+  
   /* Admin */
   .adm-topbar{padding:.65rem 1rem}
   .adm-page-title{font-size:.92rem}
@@ -787,7 +759,6 @@ select.adm-in option{background:var(--adm-card)}
   .adm-drawer.open{right:0}
 
   /* Floating button */
-  .mobile-track-btn{bottom:.9rem;right:.9rem;padding:.52rem .9rem;font-size:.74rem}
 
   /* Toasts */
   .toast{font-size:.75rem;padding:.48rem .9rem}
@@ -810,6 +781,13 @@ select.adm-in option{background:var(--adm-card)}
 }
 .qty-add-btn:hover{background:var(--saffron2);box-shadow:0 4px 12px rgba(201,77,10,0.4)}
 .qty-add-btn:active{transform:scale(0.95)}
+/* Inline quantity counter — replaces Add button after first tap */
+.inline-qty{display:inline-flex;align-items:center;border-radius:8px;overflow:hidden;border:2px solid var(--saffron);height:32px}
+.iq-btn{background:transparent;border:none;color:var(--saffron);font-size:1rem;font-weight:800;
+  width:30px;height:100%;cursor:pointer;font-family:var(--font-b);transition:background .12s,color .12s;line-height:1;padding:0}
+.iq-btn:hover{background:var(--saffron);color:white}
+.iq-num{min-width:26px;text-align:center;font-size:.82rem;font-weight:800;color:var(--text);
+  background:rgba(226,55,68,.08);height:100%;display:flex;align-items:center;justify-content:center}
 /* Admin quantity chip editor */
 .qty-chips-wrap{display:flex;flex-wrap:wrap;gap:.35rem;min-height:24px;margin-bottom:.4rem}
 .qty-chip{
@@ -851,7 +829,6 @@ select.adm-in option{background:var(--adm-card)}
   </div>
   <div class="nav-right">
     <div class="live-badge" id="live-badge-el" style="display:none"><span class="live-dot"></span>Live</div>
-    <button class="track-btn" onclick="openModifyModal()">🔍 Track Order</button>
     <button class="cart-pill" id="cart-pill" onclick="openCartModal()">
       🛒 Cart <span class="cart-bubble" id="cart-count">0</span>
     </button>
@@ -972,7 +949,6 @@ select.adm-in option{background:var(--adm-card)}
             <span>🍴</span>
           </button>
           <div class="secure-note">🔒 Your information is secure</div>
-          <div class="track-link">Already ordered? <button onclick="openModifyModal()">Track / Modify →</button></div>
         </div>
       </div>
   </div><!-- /cart-sidebar inner -->
@@ -1034,21 +1010,49 @@ select.adm-in option{background:var(--adm-card)}
 
       <!-- Orders panel -->
       <div class="adm-panel" id="adm-panel-orders">
+
+        <!-- Header row -->
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:.5rem">
-          <h2 style="font-family:var(--font-h);font-size:1.2rem;color:var(--adm-text)">Incoming Orders</h2>
-          <div style="display:flex;gap:.5rem;align-items:center">
+          <h2 style="font-family:var(--font-h);font-size:1.2rem;color:var(--adm-text)">📋 Incoming Orders</h2>
+          <div style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap">
             <span id="orders-source-badge" style="font-size:.7rem;padding:.25rem .7rem;border-radius:20px;background:var(--adm-card);color:var(--adm-mute);border:1px solid var(--adm-bord)">source: local</span>
             <button class="btn btn-ghost btn-sm" onclick="loadOrders()">🔄 Refresh</button>
+            <button class="btn btn-sm" style="background:linear-gradient(135deg,#4285F4,#34A853);color:white;border:none" onclick="openDeliveryRoute()">🗺️ Route</button>
             <button class="btn btn-red btn-sm" onclick="clearLocalOrders()" title="Clear local orders only">🗑 Clear Local</button>
           </div>
         </div>
+
+        <!-- Item quantity summary (populated by loadOrders) -->
+        <div id="orders-item-summary" style="display:none;margin-bottom:1.25rem">
+          <div style="font-size:.7rem;font-weight:700;color:var(--adm-mute);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.55rem">📦 Items to Prepare (active orders)</div>
+          <div id="orders-item-chips" style="display:flex;flex-wrap:wrap;gap:.4rem"></div>
+        </div>
+
         <div id="orders-loading" style="display:none;color:var(--adm-mute);font-size:.85rem;padding:1rem 0">⏳ Loading orders…</div>
         <div id="orders-empty" style="display:none;text-align:center;padding:2.5rem;color:var(--adm-mute)">
           <div style="font-size:2rem;margin-bottom:.5rem">📭</div>
           <div>No orders yet. They'll appear here when customers place orders.</div>
         </div>
         <div id="orders-err" style="display:none;background:rgba(224,85,85,.1);border:1px solid rgba(224,85,85,.3);border-radius:10px;padding:.75rem 1rem;color:#E05555;font-size:.82rem;margin-bottom:.75rem"></div>
-        <div id="orders-list"></div>
+
+        <!-- Orders table -->
+        <div style="overflow-x:auto;border-radius:12px;border:1px solid var(--adm-bord)">
+          <table class="adm-tbl" id="orders-table" style="display:none;min-width:620px">
+            <thead>
+              <tr>
+                <th style="width:36px"></th>
+                <th>Customer</th>
+                <th>Time</th>
+                <th>Items</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th>Phone</th>
+              </tr>
+            </thead>
+            <tbody id="orders-tbody"></tbody>
+          </table>
+        </div>
+        <div id="orders-list"></div><!-- legacy compat, kept empty -->
       </div>
 
       <!-- Export panel -->
@@ -1130,47 +1134,12 @@ create policy "settings delete" on app_settings for delete using (true);</pre>
             </div>
           </div>
           <div class="set-card">
-            <h3>📧 Email Notifications (EmailJS)</h3>
+            <h3>📧 Order Email Notifications</h3>
             <p style="color:var(--adm-mute);font-size:.78rem;margin-bottom:.75rem">
-              Free at <a href="https://emailjs.com" target="_blank" style="color:var(--adm-blue)">emailjs.com</a> — sends confirmation emails to customer &amp; restaurant. Follow the 3 steps below.
+              Enter the restaurant email below. When a customer places an order, their email app opens pre-filled with full order details — one click to send. No API keys needed.
             </p>
-            <details style="margin-bottom:.85rem">
-              <summary style="font-size:.74rem;font-weight:700;color:var(--adm-text);cursor:pointer;user-select:none">📋 Setup guide (click to expand)</summary>
-              <div style="margin-top:.65rem;background:var(--adm-bg);border-radius:8px;padding:.85rem;font-size:.74rem;color:var(--adm-mute);line-height:1.7">
-                <strong style="color:var(--adm-text)">Step 1 — Create account &amp; Email Service</strong><br>
-                Go to emailjs.com → Account → Email Services → Add New Service → Connect your Gmail/Outlook/etc → copy the <em>Service ID</em>.
-                <br><br>
-                <strong style="color:var(--adm-text)">Step 2 — Create Email Template</strong><br>
-                Email Templates → Create New Template. Use these variables in the body:<br>
-                <code style="background:var(--adm-surf);padding:.1rem .3rem;border-radius:3px">{{to_email}}</code>
-                <code style="background:var(--adm-surf);padding:.1rem .3rem;border-radius:3px">{{customer_name}}</code>
-                <code style="background:var(--adm-surf);padding:.1rem .3rem;border-radius:3px">{{order_id}}</code>
-                <code style="background:var(--adm-surf);padding:.1rem .3rem;border-radius:3px">{{order_items}}</code>
-                <code style="background:var(--adm-surf);padding:.1rem .3rem;border-radius:3px">{{order_total}}</code>
-                <code style="background:var(--adm-surf);padding:.1rem .3rem;border-radius:3px">{{order_address}}</code>
-                <code style="background:var(--adm-surf);padding:.1rem .3rem;border-radius:3px">{{order_phone}}</code>
-                <code style="background:var(--adm-surf);padding:.1rem .3rem;border-radius:3px">{{order_notes}}</code><br>
-                Set <strong>To Email</strong> field to <code style="background:var(--adm-surf);padding:.1rem .3rem;border-radius:3px">{{to_email}}</code> → copy the <em>Template ID</em>.
-                <br><br>
-                <strong style="color:var(--adm-text)">Step 3 — Get Public Key</strong><br>
-                Account → General → Public Key → copy it.
-                <br><br>
-                Paste all 3 IDs below, add restaurant email, click Save, then test.
-              </div>
-            </details>
-            <div class="fg"><label>Public Key</label><input type="text" class="adm-in" id="set-ejs-pubkey" placeholder="user_xxxx…"></div>
-            <div class="fg" style="margin-top:.5rem"><label>Service ID</label><input type="text" class="adm-in" id="set-ejs-service" placeholder="service_xxxx"></div>
-            <div class="fg" style="margin-top:.5rem"><label>Template ID</label><input type="text" class="adm-in" id="set-ejs-template" placeholder="template_xxxx"></div>
-            <div class="fg" style="margin-top:.5rem"><label>Restaurant Email (receives a copy)</label><input type="email" class="adm-in" id="set-ejs-restoemail" placeholder="richa@example.com"></div>
-            <div style="display:flex;gap:.5rem;margin-top:.65rem;align-items:center;flex-wrap:wrap">
-              <button class="btn btn-grn btn-sm" onclick="saveEmailSettings()">Save</button>
-              <button class="btn btn-ghost btn-sm" onclick="testEmailSend()">📨 Send Test Email</button>
-              <span id="ejs-test-result" style="font-size:.75rem;color:var(--adm-mute)"></span>
-            </div>
-          </div>
-            <p style="color:var(--adm-mute);font-size:.78rem;margin-bottom:.75rem">Paste your Apps Script Web App URL. <em>Note: due to browser CORS restrictions, order delivery cannot be confirmed — use Supabase for reliability.</em></p>
-            <div class="fg"><label>Apps Script Web App URL</label><input type="url" class="adm-in" id="set-sheets" placeholder="https://script.google.com/macros/s/…/exec"></div>
-            <button class="btn btn-grn btn-sm" onclick="saveSetting('sheetsUrl','set-sheets')">Save</button>
+            <div class="fg"><label>Restaurant Email (receives all orders)</label><input type="email" class="adm-in" id="set-ejs-restoemail" placeholder="richa@example.com"></div>
+            <button class="btn btn-grn btn-sm" style="margin-top:.6rem" onclick="saveRestaurantEmail()">Save</button>
           </div>
           <div class="set-card">
             <h3>🖼️ Unsplash API Key</h3>
@@ -1395,9 +1364,6 @@ if (!menuItems) {
 /* Apply saved settings to admin inputs */
 applySettingsToUI();
 
-// Init EmailJS if configured
-initEmailJS();
-
 /* ═══════════════════════════════════════
    UTILITIES
 ═══════════════════════════════════════ */
@@ -1501,9 +1467,6 @@ function applySettingsToUI() {
     'set-sb-key':          settings.supabaseKey,
     'set-ukey':            settings.unsplashKey,
     'set-dfee':            settings.deliveryFee,
-    'set-ejs-pubkey':      settings.ejsPublicKey,
-    'set-ejs-service':     settings.ejsServiceId,
-    'set-ejs-template':    settings.ejsTemplateId,
     'set-ejs-restoemail':  settings.ejsRestoEmail,
     'set-sheets':          settings.sheetsUrl,
     'set-rname':           settings.restaurantName,
@@ -1746,6 +1709,15 @@ function renderMenuGrid() {
       const cls = {veg:'tag-veg',spicy:'tag-spicy',new:'tag-new',pop:'tag-pop'}[t]||'';
       return `<span class="item-tag ${cls}">${TAG_LABELS[t]||t}</span>`;
     }).join('');
+    const inCart = cart.find(i => i.name === it.name);
+    const qty = inCart ? inCart.qty : 0;
+    const footerControls = qty > 0
+      ? `<div class="inline-qty" id="iqty-${it.id}">
+           <button class="iq-btn" onclick="inlineQty('${it.id}','${it.name.replace(/'/g,"\\'")}',${it.price},'${it.emoji}',-1)">−</button>
+           <span class="iq-num">${qty}</span>
+           <button class="iq-btn iq-add" onclick="inlineQty('${it.id}','${it.name.replace(/'/g,"\\'")}',${it.price},'${it.emoji}',1)">+</button>
+         </div>`
+      : `<button class="qty-add-btn" id="iqty-${it.id}" onclick="inlineQty('${it.id}','${it.name.replace(/'/g,"\\'")}',${it.price},'${it.emoji}',1)">Add</button>`;
     return `
       <div class="menu-item visible" data-cat="${esc(it.cat)}">
         <div class="item-img">${imgContent}</div>
@@ -1756,13 +1728,40 @@ function renderMenuGrid() {
         </div>
         <div class="item-footer">
           <span class="item-price">$${it.price}</span>
-          <div class="qty-select-wrap">
-            ${buildQtyDropdown(it)}
-            <button class="qty-add-btn" onclick="addWithQty('${it.name.replace(/'/g,"\\'")}',${it.price},'${it.emoji}','qty-${it.id}')">Add</button>
-          </div>
+          ${footerControls}
         </div>
       </div>`;
   }).join('');
+}
+
+/* Inline qty — mutates cart and swaps button ↔ counter without full re-render */
+function inlineQty(itemId, name, price, emoji, delta) {
+  const ex = cart.find(i => i.name === name);
+  if (delta > 0) {
+    if (ex) ex.qty++;
+    else cart.push({name, price, emoji, qty: 1});
+  } else {
+    if (ex) {
+      ex.qty--;
+      if (ex.qty <= 0) cart = cart.filter(i => i.name !== name);
+    }
+  }
+  renderCart();
+
+  // Swap the control in place (no full grid re-render = no flicker)
+  const el = document.getElementById('iqty-' + itemId);
+  if (!el) return;
+  const newQty = (cart.find(i => i.name === name) || {qty: 0}).qty;
+  if (newQty > 0) {
+    el.outerHTML = `<div class="inline-qty" id="iqty-${itemId}">
+      <button class="iq-btn" onclick="inlineQty('${itemId}','${name.replace(/'/g,"\\'")}',${price},'${emoji}',-1)">−</button>
+      <span class="iq-num">${newQty}</span>
+      <button class="iq-btn iq-add" onclick="inlineQty('${itemId}','${name.replace(/'/g,"\\'")}',${price},'${emoji}',1)">+</button>
+    </div>`;
+  } else {
+    el.outerHTML = `<button class="qty-add-btn" id="iqty-${itemId}" onclick="inlineQty('${itemId}','${name.replace(/'/g,"\\'")}',${price},'${emoji}',1)">Add</button>`;
+  }
+  if (delta > 0) showStoreToast(`${emoji} ${name} added`);
 }
 
 /* Cart */
@@ -1876,80 +1875,83 @@ function closeCartModal(e) {
 /* Config */
 
 /* ═══════════════════════════════════════
-   EMAIL HELPERS (EmailJS)
+/* ═══════════════════════════════════════
+   EMAIL — clipboard copy + mailto
 ═══════════════════════════════════════ */
-function hasEmailJS() {
-  return !!(settings.ejsPublicKey && settings.ejsServiceId && settings.ejsTemplateId);
+function buildOrderEmailText(orderData, cartSnapshot) {
+  const items = cartSnapshot || cart;
+  const sub   = items.reduce((s,i)=>s+i.price*i.qty, 0);
+  const total = parseFloat((orderData.total||'0').replace('$',''));
+  const fee   = Math.max(0, total - sub);
+  const lines = [
+    `Hi ${orderData.name},`,
+    ``,
+    `Thank you for your order from Richa Ki Rasoi! 🍛`,
+    ``,
+    `ORDER DETAILS`,
+    `─────────────────────────`,
+    `Order ID   : ${orderData.id}`,
+    `Date/Time  : ${new Date().toLocaleString()}`,
+    `─────────────────────────`,
+    ``,
+    `ITEMS ORDERED`,
+    ...items.map(i => `  ${i.emoji||''} ${i.name}  ×${i.qty}   $${(i.price*i.qty).toFixed(2)}`),
+    ``,
+    `Subtotal   : $${sub.toFixed(2)}`,
+    `Delivery   : ${fee===0 ? 'FREE 🎉' : '$'+fee.toFixed(2)}`,
+    `TOTAL      : ${orderData.total}`,
+    ``,
+    `─────────────────────────`,
+    `Deliver to : ${orderData.address}`,
+    `Phone      : ${orderData.phone}`,
+    orderData.notes ? `Notes      : ${orderData.notes}` : null,
+    `─────────────────────────`,
+    ``,
+    `We'll start cooking shortly. Call us if you need help!`,
+    ``,
+    `— Richa Ki Rasoi 🍽️`,
+  ].filter(l => l !== null).join('\n');
+  return lines;
 }
 
-/* EmailJS v3 uses emailjs.init({ publicKey }) — call once when settings are ready */
-let _ejsInitialised = false;
-function initEmailJS() {
-  if (!hasEmailJS()) return false;
-  try {
-    emailjs.init({ publicKey: settings.ejsPublicKey });
-    _ejsInitialised = true;
-    return true;
-  } catch(e) {
-    console.warn('EmailJS init error:', e);
-    return false;
+function sendOrderEmail(orderData, cartSnapshot) {
+  const toEmail    = orderData.email   || '';
+  const restoEmail = settings.ejsRestoEmail || '';
+  if (!toEmail && !restoEmail) return; // nobody to email
+
+  const body    = buildOrderEmailText(orderData, cartSnapshot);
+  const subject = `Your Order #${orderData.id} — Richa Ki Rasoi`;
+
+  // Copy full details to clipboard so the user can paste if mail client truncates
+  try { navigator.clipboard.writeText(`Subject: ${subject}\n\n${body}`); } catch(e) {}
+
+  // Build mailto — send to customer, BCC restaurant
+  const params = [
+    `subject=${encodeURIComponent(subject)}`,
+    `body=${encodeURIComponent(body)}`,
+  ];
+  if (restoEmail && restoEmail !== toEmail) {
+    params.push(`bcc=${encodeURIComponent(restoEmail)}`);
   }
+  // Use location.href instead of window.open — avoids popup blocker
+  const link = `mailto:${encodeURIComponent(toEmail)}?${params.join('&')}`;
+
+  // Create invisible <a> and click it — most reliable cross-browser approach
+  const a = document.createElement('a');
+  a.href = link;
+  a.style.display = 'none';
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => document.body.removeChild(a), 500);
+
+  showStoreToast('📧 Email client opening…', 's');
 }
 
-async function sendOrderEmail(orderData) {
-  if (!hasEmailJS()) return;
-  // Re-init every time to pick up any settings changes
-  if (!initEmailJS()) return;
-
-  const baseParams = {
-    customer_name:    orderData.name,
-    order_id:         orderData.id,
-    order_items:      orderData.items,
-    order_total:      orderData.total,
-    order_address:    orderData.address,
-    order_phone:      orderData.phone || '—',
-    order_notes:      orderData.notes || '—',
-    restaurant_email: settings.ejsRestoEmail || ''
-  };
-
-  const sends = [];
-
-  // Send confirmation to customer if they gave an email
-  if (orderData.email) {
-    sends.push(
-      emailjs.send(
-        settings.ejsServiceId,
-        settings.ejsTemplateId,
-        { ...baseParams, to_email: orderData.email }
-      )
-    );
-  }
-
-  // Send copy to restaurant email (if different from customer)
-  if (settings.ejsRestoEmail && settings.ejsRestoEmail !== orderData.email) {
-    sends.push(
-      emailjs.send(
-        settings.ejsServiceId,
-        settings.ejsTemplateId,
-        { ...baseParams, to_email: settings.ejsRestoEmail }
-      )
-    );
-  }
-
-  if (!sends.length) return;
-
-  try {
-    await Promise.all(sends);
-    console.log('✅ Email(s) sent via EmailJS');
-    showStoreToast('📧 Order confirmation email sent!', 's');
-  } catch(e) {
-    // Log full error for debugging
-    console.error('EmailJS send error:', e);
-    const msg = e?.text || e?.message || JSON.stringify(e);
-    console.warn('EmailJS detail:', msg);
-    // Don't block order — just warn
-    showStoreToast('⚠️ Email not sent — check EmailJS settings', 'e');
-  }
+function saveRestaurantEmail() {
+  settings.ejsRestoEmail = document.getElementById('set-ejs-restoemail').value.trim();
+  saveSettingsLocal();
+  saveSettingsToCloud();
+  showAdmToast('✅ Restaurant email saved', 'gr');
 }
 
 /* Place order */
@@ -2002,8 +2004,9 @@ async function placeOrder() {
     } catch(e) { console.warn('Sheets error',e); }
   }
 
-  /* ── 4. Send email via EmailJS ── */
-  sendOrderEmail(payload);
+  /* ── 4. Email: pass snapshot of cart before it clears ── */
+  const cartSnap = cart.map(i=>({...i}));
+  sendOrderEmail(payload, cartSnap);
 
   btn.disabled=false; btn.innerHTML='Place Order 🍴';
   // Show order ID in success screen
@@ -2029,160 +2032,11 @@ function copyOrderId() {
 /* ═══════════════════════════════════════
    ORDER MODIFY / TRACK
 ═══════════════════════════════════════ */
-let modifyOrderData = null; // current order being modified
-let modifyItems = [];       // parsed item quantities for editing
-
-function openModifyModal(prefillId) {
-  document.getElementById('mod-overlay').classList.add('show');
-  document.getElementById('mod-result').style.display = 'none';
-  document.getElementById('mod-err').classList.remove('show');
-  const inp = document.getElementById('mod-order-id');
-  inp.value = prefillId || '';
-  setTimeout(() => inp.focus(), 80);
-}
-
-function closeModifyModal() {
-  document.getElementById('mod-overlay').classList.remove('show');
-  modifyOrderData = null;
-  modifyItems = [];
-}
-
-async function lookupOrder() {
-  const orderId = document.getElementById('mod-order-id').value.trim();
-  if (!orderId) { showModErr('Please enter an Order ID.'); return; }
-
-  const errEl = document.getElementById('mod-err');
-  errEl.classList.remove('show');
-  document.getElementById('mod-result').style.display = 'none';
-
-  let order = null;
-
-  // 1. Try Supabase first
-  if (hasSupabase()) {
-    try {
-      const res = await fetch(sbUrl('orders?id=eq.' + encodeURIComponent(orderId) + '&select=*'), { headers: sbHeaders() });
-      if (res.ok) {
-        const data = await res.json();
-        if (data && data.length) order = data[0];
-      }
-    } catch(e) { console.warn('Supabase lookup error', e); }
-  }
-
-  // 2. Fallback to localStorage
-  if (!order) {
-    const local = JSON.parse(localStorage.getItem('rkr_orders') || '[]');
-    order = local.find(o => o.id === orderId) || null;
-  }
-
-  if (!order) { showModErr('Order not found. Please check the ID and try again.'); return; }
-
-  modifyOrderData = order;
-  renderModifyOrder(order);
-}
-
-function showModErr(msg) {
-  const el = document.getElementById('mod-err');
-  el.textContent = msg;
-  el.classList.add('show');
-}
-
-function renderModifyOrder(order) {
-  // Status badge
-  const statusLabels = {new:'🟠 New — Modifiable', preparing:'🟡 Preparing', ready:'🟢 Ready', delivered:'✅ Delivered'};
-  const statusClasses = {new:'msb-new', preparing:'msb-preparing', ready:'msb-ready', delivered:'msb-delivered'};
-  const badge = document.getElementById('mod-status-badge');
-  badge.textContent = statusLabels[order.status] || order.status;
-  badge.className = 'mod-status-badge ' + (statusClasses[order.status] || 'msb-delivered');
-
-  document.getElementById('mod-cust-name').textContent = order.name || '—';
-  document.getElementById('mod-cust-phone').textContent = order.phone || '—';
-  document.getElementById('mod-cust-addr').textContent = order.address || '—';
-  document.getElementById('mod-placed-at').textContent = order.created_at ? new Date(order.created_at).toLocaleString() : '—';
-  document.getElementById('mod-displayed-id').textContent = order.id;
-
-  const editable = order.status === 'new';
-  document.getElementById('mod-editable').style.display = editable ? 'block' : 'none';
-  document.getElementById('mod-locked').style.display   = editable ? 'none' : 'block';
-  if (!editable) document.getElementById('mod-locked-status').textContent = order.status;
-
-  if (editable) {
-    // Parse items string back into editable list
-    // Format: "2x Butter Chicken ($22), 1x Naan ($6)"
-    modifyItems = parseOrderItems(order.items || '');
-    document.getElementById('mod-notes').value = order.notes || '';
-    renderModifyItems();
-  }
-
-  document.getElementById('mod-result').style.display = 'block';
-}
-
-function parseOrderItems(itemsStr) {
-  // Parse "2x Butter Chicken ($22)" format
-  return itemsStr.split(',').map(part => {
-    part = part.trim();
-    const m = part.match(/^(\d+)x\s+(.+?)\s+\(\$([0-9.]+)\)$/);
-    if (m) return { qty: parseInt(m[1]), name: m[2], price: parseFloat(m[3]) };
-    return { qty: 1, name: part, price: 0 };
-  }).filter(i => i.name);
-}
-
-function renderModifyItems() {
-  const list = document.getElementById('mod-items-list');
-  list.innerHTML = modifyItems.map((item, idx) => `
-    <div class="mod-item-row" id="mod-item-${idx}">
-      <div>
-        <div class="mod-item-name">${esc(item.name)}</div>
-        <div class="mod-item-price">$${item.price.toFixed(2)} each</div>
-      </div>
-      <div class="mod-qty-ctrl">
-        <button class="mod-qty-btn" onclick="modifyItemQty(${idx}, -1)">−</button>
-        <span class="mod-qty-num" id="mod-q-${idx}">${item.qty}</span>
-        <button class="mod-qty-btn" onclick="modifyItemQty(${idx}, 1)">+</button>
-      </div>
-    </div>
-  `).filter((_, idx) => modifyItems[idx].qty > 0).join('') || '<div style="text-align:center;padding:.8rem;color:var(--muted);font-size:.82rem">No items — all removed. Save to cancel order.</div>';
-}
-
-function modifyItemQty(idx, delta) {
-  modifyItems[idx].qty = Math.max(0, modifyItems[idx].qty + delta);
-  renderModifyItems();
-}
-
-async function saveOrderModify() {
-  if (!modifyOrderData) return;
-  const remaining = modifyItems.filter(i => i.qty > 0);
-  const newItemsStr = remaining.map(i => `${i.qty}x ${i.name} ($${i.price})`).join(', ');
-  const newNotes = document.getElementById('mod-notes').value.trim();
-  const newTotal = remaining.reduce((s, i) => s + i.price * i.qty, 0);
-  const newTotalStr = '$' + (newTotal + getDeliveryFee(newTotal)).toFixed(2);
-
-  const updates = { items: newItemsStr || '(cancelled)', notes: newNotes, total: newTotalStr, status: remaining.length ? 'new' : 'cancelled' };
-
-  let saved = false;
-
-  // 1. Update Supabase
-  if (hasSupabase()) {
-    try {
-      const res = await fetch(sbUrl('orders?id=eq.' + encodeURIComponent(modifyOrderData.id)), {
-        method: 'PATCH',
-        headers: { ...sbHeaders(), 'Prefer': 'return=minimal' },
-        body: JSON.stringify(updates)
-      });
-      if (res.ok || res.status === 204) { saved = true; }
-    } catch(e) { console.warn('Supabase patch error', e); }
-  }
-
-  // 2. Also update local storage
-  const local = JSON.parse(localStorage.getItem('rkr_orders') || '[]');
-  const idx = local.findIndex(o => o.id === modifyOrderData.id);
-  if (idx > -1) { Object.assign(local[idx], updates); localStorage.setItem('rkr_orders', JSON.stringify(local)); saved = true; }
-
-  if (saved) {
-    closeModifyModal();
-    showStoreToast('✅ Order updated successfully!', 's');
-  } else {
-    showModErr('Could not save changes. Please try again.');
-  }
+/* Store toast */
+function showStoreToast(msg, type) {
+  const t = document.getElementById('store-toast');
+  t.textContent=msg; t.className=`toast ${type==='s'?'ts':type==='e'?'te':''} show`;
+  setTimeout(()=>t.classList.remove('show'),2600);
 }
 
 /* Store toast */
@@ -2700,56 +2554,9 @@ async function saveAdminPassword() {
   showAdmToast('🔐 Password updated!','gr');
 }
 
-async function saveEmailSettings() {
-  settings.ejsPublicKey  = document.getElementById('set-ejs-pubkey').value.trim();
-  settings.ejsServiceId  = document.getElementById('set-ejs-service').value.trim();
-  settings.ejsTemplateId = document.getElementById('set-ejs-template').value.trim();
-  settings.ejsRestoEmail = document.getElementById('set-ejs-restoemail').value.trim();
-  await saveSettings();
-  _ejsInitialised = false; // force re-init on next use
-  initEmailJS();
-  showAdmToast('✅ Email settings saved!','gr');
-}
 
-async function testEmailSend() {
-  const el = document.getElementById('ejs-test-result');
-  el.textContent = '⏳ Sending…'; el.style.color='var(--adm-mute)';
+async function testEmailSend() { showAdmToast('📧 Email uses mailto — no test needed!','gr'); }
 
-  if (!hasEmailJS()) {
-    el.textContent = '❌ Missing Public Key, Service ID or Template ID';
-    el.style.color = 'var(--adm-red)'; return;
-  }
-  const testTo = settings.ejsRestoEmail;
-  if (!testTo) {
-    el.textContent = '❌ Enter a Restaurant Email first';
-    el.style.color = 'var(--adm-red)'; return;
-  }
-
-  try {
-    // Always re-init with latest saved key
-    emailjs.init({ publicKey: settings.ejsPublicKey });
-
-    const result = await emailjs.send(settings.ejsServiceId, settings.ejsTemplateId, {
-      to_email:         testTo,
-      customer_name:    'Test Customer',
-      order_id:         'TEST-' + Date.now().toString(36).toUpperCase(),
-      order_items:      '2x Butter Chicken ($22), 1x Naan ($6)',
-      order_total:      '$31.00',
-      order_address:    '123 Test Street',
-      order_phone:      '+1 555-0000',
-      order_notes:      'This is a test order email.',
-      restaurant_email: testTo
-    });
-
-    el.textContent = `✅ Test email sent to ${testTo} (status ${result.status})`;
-    el.style.color = 'var(--adm-grn)';
-  } catch(e) {
-    const detail = e?.text || e?.message || JSON.stringify(e);
-    el.textContent = '❌ ' + detail;
-    el.style.color = 'var(--adm-red)';
-    console.error('EmailJS test error:', e);
-  }
-}
 
 /* Admin toast */
 function showAdmToast(msg, type) {
@@ -2825,63 +2632,204 @@ async function testSupabaseConnection() {
    ORDERS PANEL
 ═══════════════════════════════════════ */
 async function loadOrders() {
-  const listEl   = document.getElementById('orders-list');
-  const emptyEl  = document.getElementById('orders-empty');
-  const loadEl   = document.getElementById('orders-loading');
-  const errEl    = document.getElementById('orders-err');
-  const badgeEl  = document.getElementById('orders-source-badge');
+  const tbodyEl   = document.getElementById('orders-tbody');
+  const tableEl   = document.getElementById('orders-table');
+  const emptyEl   = document.getElementById('orders-empty');
+  const loadEl    = document.getElementById('orders-loading');
+  const errEl     = document.getElementById('orders-err');
+  const badgeEl   = document.getElementById('orders-source-badge');
+  const summaryEl = document.getElementById('orders-item-summary');
+  const chipsEl   = document.getElementById('orders-item-chips');
 
-  listEl.innerHTML=''; emptyEl.style.display='none'; errEl.style.display='none';
-  loadEl.style.display='block';
+  tbodyEl.innerHTML = '';
+  tableEl.style.display = 'none';
+  emptyEl.style.display = 'none';
+  errEl.style.display = 'none';
+  summaryEl.style.display = 'none';
+  loadEl.style.display = 'block';
 
   let orders = [];
 
   if (hasSupabase()) {
     try {
-      const res = await fetch(sbUrl('orders?select=*&order=created_at.desc&limit=100'), { headers: sbHeaders() });
+      const res = await fetch(sbUrl('orders?select=*&order=created_at.desc&limit=200'), { headers: sbHeaders() });
       if (!res.ok) throw new Error('HTTP ' + res.status);
       orders = await res.json();
-      badgeEl.textContent = 'source: supabase'; badgeEl.style.color='#3DBA7B';
+      badgeEl.textContent = 'source: supabase';
+      badgeEl.style.color = '#3DBA7B';
     } catch(e) {
-      errEl.textContent = '⚠️ Supabase error: ' + e.message + ' — showing local orders instead.';
-      errEl.style.display='block';
+      errEl.textContent = '⚠️ Supabase error: ' + e.message + ' — showing local orders.';
+      errEl.style.display = 'block';
       orders = JSON.parse(localStorage.getItem('rkr_orders') || '[]');
-      badgeEl.textContent = 'source: local'; badgeEl.style.color='var(--adm-mute)';
+      badgeEl.textContent = 'source: local';
+      badgeEl.style.color = 'var(--adm-mute)';
     }
   } else {
     orders = JSON.parse(localStorage.getItem('rkr_orders') || '[]');
-    badgeEl.textContent = 'source: local'; badgeEl.style.color='var(--adm-mute)';
+    badgeEl.textContent = 'source: local';
+    badgeEl.style.color = 'var(--adm-mute)';
   }
 
-  loadEl.style.display='none';
+  loadEl.style.display = 'none';
+  if (!orders.length) { emptyEl.style.display = 'block'; return; }
 
-  if (!orders.length) { emptyEl.style.display='block'; return; }
+  // Store for route function
+  window._currentOrders = orders;
 
-  listEl.innerHTML = orders.map(o => {
-    const dt = o.created_at ? new Date(o.created_at).toLocaleString() : '—';
-    const statusColor = {new:'#FF6B35',preparing:'#FFB347',ready:'#3DBA7B',delivered:'var(--adm-mute)'}[o.status]||'var(--adm-mute)';
+  /* ── Item quantity summary across active orders ── */
+  const itemTotals = {};
+  const activeStatuses = new Set(['new', 'preparing', 'ready']);
+  orders.filter(o => activeStatuses.has(o.status)).forEach(o => {
+    (o.items || '').split(',').forEach(seg => {
+      const m = seg.trim().match(/^(\d+)x\s+(.+?)(?:\s+\(\$[\d.]+\))?$/);
+      if (!m) return;
+      const qty = parseInt(m[1]);
+      const name = m[2].trim();
+      if (!itemTotals[name]) {
+        const mi = (menuItems||[]).find(x => x.name === name);
+        itemTotals[name] = { qty: 0, emoji: mi ? mi.emoji : '🍽️' };
+      }
+      itemTotals[name].qty += qty;
+    });
+  });
+  const sorted = Object.entries(itemTotals).sort((a,b) => b[1].qty - a[1].qty);
+  if (sorted.length) {
+    chipsEl.innerHTML = sorted.map(([name, {qty, emoji}]) =>
+      `<span class="ord-item-chip">${emoji} ${esc(name)} <span class="chip-qty">×${qty}</span></span>`
+    ).join('');
+    summaryEl.style.display = 'block';
+  }
+
+  /* ── Orders table ── */
+  const STATUS_COLOR = { new:'#FF6B35', preparing:'#FFB347', ready:'#3DBA7B', delivered:'var(--adm-mute)', cancelled:'#E05555' };
+  const STATUS_ICON  = { new:'🆕', preparing:'👩‍🍳', ready:'✅', delivered:'📦', cancelled:'❌' };
+
+  tbodyEl.innerHTML = orders.map((o, idx) => {
+    const dt = o.created_at
+      ? new Date(o.created_at).toLocaleString('en-CA',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})
+      : '—';
+    const sc = STATUS_COLOR[o.status] || 'var(--adm-mute)';
+    const si = STATUS_ICON[o.status] || '•';
+    const itemsList = (o.items||'').split(',').map(s=>s.trim()).filter(Boolean);
+    const itemsShort = itemsList.slice(0,2).join(' · ') + (itemsList.length > 2 ? ` +${itemsList.length-2} more` : '');
+    const expandId  = 'ord-exp-' + idx;
+    const chevronId = 'ord-chv-' + idx;
+    const statusOpts = ['new','preparing','ready','delivered','cancelled']
+      .map(s => `<option value="${s}" ${o.status===s?'selected':''}>${STATUS_ICON[s]} ${s}</option>`)
+      .join('');
+    const colorMap = JSON.stringify(STATUS_COLOR).replace(/"/g,"'");
+    const detailHtml = `
+      <div class="ord-expand-inner">
+        <div style="font-size:.7rem;font-weight:700;color:var(--adm-mute);text-transform:uppercase;letter-spacing:.4px;margin-bottom:.4rem">Items Ordered</div>
+        ${itemsList.map(item=>`<div style="padding:.12rem 0;color:var(--adm-text)">${esc(item)}</div>`).join('')}
+        <div style="margin-top:.6rem;display:flex;flex-wrap:wrap;gap:.75rem;font-size:.78rem">
+          <span>📍 <strong>${esc(o.address||'—')}</strong></span>
+          <span>📞 ${esc(o.phone||'—')}</span>
+          ${o.email?`<span>✉️ ${esc(o.email)}</span>`:''}
+          ${o.notes?`<span>📝 ${esc(o.notes)}</span>`:''}
+        </div>
+        <div style="margin-top:.4rem;font-size:.7rem;color:var(--adm-mute)">Order ID: <code style="background:var(--adm-bg);padding:.1rem .4rem;border-radius:4px">${esc(o.id||'')}</code></div>
+      </div>`;
     return `
-    <div style="background:var(--adm-card);border:1px solid var(--adm-bord);border-radius:12px;padding:1rem 1.1rem;margin-bottom:.65rem">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:.5rem">
-        <div>
-          <div style="font-weight:700;color:var(--adm-text);font-size:.95rem">${esc(o.name||'—')}</div>
-          <div style="font-size:.74rem;color:var(--adm-mute);margin-top:.15rem">${dt}</div>
-        </div>
-        <div style="display:flex;align-items:center;gap:.5rem">
-          <span style="font-weight:700;color:var(--adm-acc);font-size:.95rem">${esc(o.total||'—')}</span>
-          <select onchange="updateOrderStatus('${o.id}',this.value)" style="background:var(--adm-surf);border:1px solid var(--adm-bord2);border-radius:7px;color:${statusColor};padding:.25rem .5rem;font-size:.72rem;font-family:var(--font-b);font-weight:700;cursor:pointer;outline:none">
-            ${['new','preparing','ready','delivered'].map(s=>`<option value="${s}" ${o.status===s?'selected':''}>${s}</option>`).join('')}
+      <tr class="ord-row-main" onclick="toggleOrdRow('${expandId}','${chevronId}')">
+        <td style="width:28px"><span class="ord-chevron" id="${chevronId}">▶</span></td>
+        <td style="color:var(--adm-text);font-weight:600">${esc(o.name||'—')}</td>
+        <td style="white-space:nowrap;color:var(--adm-mute);font-size:.75rem">${dt}</td>
+        <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(itemsShort)}</td>
+        <td style="font-weight:700;color:var(--adm-acc)">${esc(o.total||'—')}</td>
+        <td>
+          <select class="ord-status-sel" style="color:${sc}" onclick="event.stopPropagation()"
+            onchange="updateOrderStatus('${o.id}',this.value);this.style.color=(${colorMap})[this.value]||'var(--adm-mute)'">
+            ${statusOpts}
           </select>
-        </div>
-      </div>
-      <div style="margin-top:.6rem;font-size:.8rem;color:var(--adm-mute)">
-        <span>📞 ${esc(o.phone||'—')}</span>
-        <span style="margin-left:1rem">📍 ${esc(o.address||'—')}</span>
-      </div>
-      <div style="margin-top:.45rem;font-size:.78rem;color:var(--adm-text);background:var(--adm-surf);border-radius:7px;padding:.45rem .65rem">${esc(o.items||'—')}</div>
-      ${o.notes ? `<div style="margin-top:.35rem;font-size:.75rem;color:var(--adm-mute)">📝 ${esc(o.notes)}</div>` : ''}
-    </div>`;
+        </td>
+        <td style="white-space:nowrap">${esc(o.phone||'—')}</td>
+      </tr>
+      <tr class="ord-row-expand" id="${expandId}">
+        <td colspan="7">${detailHtml}</td>
+      </tr>`;
   }).join('');
+
+  tableEl.style.display = 'table';
+}
+
+/* ═══════════════════════════════════════
+   GOOGLE MAPS DELIVERY ROUTE
+   Origin: 7360 Zinnia Pl, Mississauga
+   Collects addresses from new/preparing orders,
+   optimises via Google Maps waypoint URL
+═══════════════════════════════════════ */
+const DEPOT_ADDRESS = '7360 Zinnia Place, Mississauga, ON';
+
+function openDeliveryRoute() {
+  // Collect all active (undelivered) order addresses from current table
+  const activeStatuses = new Set(['new', 'preparing', 'ready']);
+  const rows = document.querySelectorAll('#orders-tbody .ord-row-main');
+
+  // Gather addresses from the rendered table expand rows
+  const addresses = [];
+  document.querySelectorAll('#orders-tbody .ord-row-expand').forEach(row => {
+    const addressEl = row.querySelector('strong');
+    if (addressEl) {
+      const addr = addressEl.textContent.trim();
+      if (addr && addr !== '—') addresses.push(addr);
+    }
+  });
+
+  // Also read from the global orders data captured at load time
+  // Use _currentOrders which we'll set in loadOrders
+  if (addresses.length === 0 && window._currentOrders) {
+    window._currentOrders
+      .filter(o => activeStatuses.has(o.status))
+      .forEach(o => { if (o.address && o.address !== '—') addresses.push(o.address); });
+  }
+
+  if (addresses.length === 0) {
+    showAdmToast('⚠️ No active delivery addresses found', 'rd');
+    return;
+  }
+
+  // Remove duplicates
+  const unique = [...new Set(addresses)];
+
+  // Google Maps directions URL:
+  // /maps/dir/origin/waypoint1/waypoint2/.../destination
+  // Adding ?travelmode=driving&optimize:true via the Maps URL API
+  // The trick: use the same origin as final destination so Maps can optimise a round trip,
+  // but we omit the last destination so it ends at the last stop
+
+  const enc = a => encodeURIComponent(a + ', ON, Canada');
+
+  if (unique.length === 1) {
+    // Single stop — direct directions
+    const url = `https://www.google.com/maps/dir/${enc(DEPOT_ADDRESS)}/${enc(unique[0])}`;
+    window.open(url, '_blank');
+    showAdmToast('🗺️ Opening route for 1 stop', 'gr');
+    return;
+  }
+
+  // Multi-stop: Google Maps URL with waypoints
+  // Format: /maps/dir/start/wp1/wp2/.../last
+  // Google Maps automatically suggests optimised order when you tap the ⋮ menu → Optimise
+  // We sort stops roughly by proximity to depot (Mississauga → Oakville direction = west→east on QEW)
+  // The depot is in Mississauga; Oakville is east on QEW; Burlington further east
+  // Simple heuristic: keep the stated first stop (1324 Eddyshain Dr, Oakville) first, rest as-is
+  const stops = unique.slice(0, 9); // Google Maps URL supports max 9 waypoints
+
+  const allParts = [enc(DEPOT_ADDRESS), ...stops.map(enc)].join('/');
+  // &travelmode=driving&optimize:true tells Maps to offer route optimisation
+  const url = `https://www.google.com/maps/dir/${allParts}/?travelmode=driving`;
+
+  window.open(url, '_blank');
+  showAdmToast(`🗺️ Route opened — ${stops.length} stops. Tap ⋮ → Optimise in Maps!`, 'gr');
+}
+
+function toggleOrdRow(expandId, chevronId) {
+  const row = document.getElementById(expandId);
+  const chv = document.getElementById(chevronId);
+  if (!row) return;
+  const open = row.classList.toggle('open');
+  if (chv) chv.classList.toggle('open', open);
 }
 
 async function updateOrderStatus(id, status) {
@@ -3113,53 +3061,6 @@ renderStore();
   </div>
 </div>
 
-<!-- Floating Track Order button (mobile/tablet only) -->
-<button class="mobile-track-btn" onclick="openModifyModal()">🔍 Track Order</button>
-
-<!-- Order Modify Modal -->
-<div class="mod-overlay" id="mod-overlay" onclick="if(event.target===this)closeModifyModal()">
-  <div class="mod-card">
-    <div class="mod-header">
-      <h3>🔍 Track / Modify Order</h3>
-      <button class="mod-close" onclick="closeModifyModal()">✕</button>
-    </div>
-    <div class="mod-body">
-      <div class="mod-lookup">
-        <input type="text" id="mod-order-id" placeholder="Paste your Order ID…" onkeydown="if(event.key==='Enter')lookupOrder()">
-        <button onclick="lookupOrder()">Look Up</button>
-      </div>
-      <div class="mod-err" id="mod-err"></div>
-      <div id="mod-result" style="display:none">
-        <div class="mod-order-found">
-          <div id="mod-status-badge" class="mod-status-badge"></div>
-          <div class="mod-order-meta">
-            <div><strong id="mod-cust-name">—</strong> &nbsp;·&nbsp; <span id="mod-cust-phone">—</span></div>
-            <div style="margin-top:.2rem">📍 <span id="mod-cust-addr">—</span></div>
-            <div style="margin-top:.2rem;font-size:.72rem;color:#AAAAAA">Placed: <span id="mod-placed-at">—</span></div>
-          </div>
-        </div>
-
-        <div id="mod-editable" style="display:none">
-          <div class="mod-section-title">Order Items <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:.7rem">(adjust quantities or remove items)</span></div>
-          <div id="mod-items-list"></div>
-          <div class="mod-section-title" style="margin-top:1rem">Add Notes</div>
-          <textarea id="mod-notes" rows="2" style="width:100%;border:1.5px solid var(--border);border-radius:8px;padding:.5rem .75rem;font-family:var(--font-b);font-size:.82rem;color:var(--text);outline:none;resize:vertical" placeholder="Any special instructions…"></textarea>
-          <div class="mod-actions">
-            <button class="mod-cancel-btn" onclick="closeModifyModal()">Cancel</button>
-            <button class="mod-save-btn" onclick="saveOrderModify()">💾 Save Changes</button>
-          </div>
-        </div>
-
-        <div id="mod-locked" style="display:none;text-align:center;padding:1rem 0">
-          <div style="font-size:2rem;margin-bottom:.5rem">🔒</div>
-          <div style="font-size:.85rem;color:var(--muted);line-height:1.6">This order is already being <strong style="color:var(--text)" id="mod-locked-status">prepared</strong>.<br>Changes can no longer be made.<br>Call us if you need help.</div>
-        </div>
-
-        <div class="mod-note">Order ID: <code style="font-size:.75rem;background:var(--warm);padding:.1rem .4rem;border-radius:4px" id="mod-displayed-id"></code></div>
-      </div>
-    </div>
-  </div>
-</div>
 
 </body>
 </html>
