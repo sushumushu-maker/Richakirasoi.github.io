@@ -1317,10 +1317,14 @@ create policy "settings delete" on app_settings for delete using (true);</pre>
 ═══════════════════════════════════════ */
 
 /* ──────────────────────────────────────────────────────────────────
-   🔑 SUPABASE CREDENTIALS  ← fill once, push to GitHub, all devices sync
+   🔑 SUPABASE CREDENTIALS
+   IMPORTANT: Use the "anon / public" JWT key (starts with eyJ...)
+   NOT the "publishable" key (sb_publishable_...) — that key is for
+   the Supabase JS SDK only and returns 403 on direct REST API calls.
+   Get the correct key: Supabase Dashboard → Project Settings → API → anon/public
    ────────────────────────────────────────────────────────────────── */
 const SUPABASE_URL = 'https://qwttrwwtarragfbzenoe.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_BNdgX1eqFq6LGmGDNf7Eyw_FXts7iZy';
+const SUPABASE_KEY = ''; // ← paste your anon/public JWT key here (starts with eyJ...)
 
 const MENU_KEY     = 'rkr_menu';
 const SETTINGS_KEY = 'rkr_settings';
@@ -1978,23 +1982,29 @@ async function placeOrder() {
 
   /* ── 1. Try Supabase ── */
   if (hasSupabase()) {
-    try {
-      const res = await fetch(sbUrl('orders'), {
-        method: 'POST',
-        headers: sbHeaders(true),
-        body: JSON.stringify(payload)
-      });
-      if (res.ok || res.status === 201) {
-        saved = true;
-        console.log('✅ Order saved to Supabase');
-      } else {
-        const b = await res.json().catch(()=>({}));
-        console.warn('Supabase insert error', res.status, b);
+    const _key = settings.supabaseKey || '';
+    if (_key.startsWith('sb_')) {
+      showStoreToast('⚠️ Wrong Supabase key — update anon/public JWT key in Admin → Settings', 'e');
+      console.error('Supabase key is a publishable SDK key. Use the anon/public JWT (eyJ…) from Supabase Dashboard → Project Settings → API.');
+    } else {
+      try {
+        const res = await fetch(sbUrl('orders'), {
+          method: 'POST',
+          headers: sbHeaders(true),
+          body: JSON.stringify(payload)
+        });
+        if (res.ok || res.status === 201) {
+          saved = true;
+          console.log('✅ Order saved to Supabase');
+        } else {
+          const b = await res.json().catch(()=>({}));
+          console.warn('Supabase insert error', res.status, b);
+          showStoreToast('⚠️ Cloud save failed — order saved locally', 'e');
+        }
+      } catch(e) {
+        console.warn('Supabase exception', e);
         showStoreToast('⚠️ Cloud save failed — order saved locally', 'e');
       }
-    } catch(e) {
-      console.warn('Supabase exception', e);
-      showStoreToast('⚠️ Cloud save failed — order saved locally', 'e');
     }
   }
 
@@ -2620,13 +2630,23 @@ async function testSupabaseConnection() {
   const el = document.getElementById('sb-test-result');
   el.textContent = '⏳ Testing…'; el.style.color='var(--adm-mute)';
   if (!hasSupabase()) { el.textContent = '❌ Missing URL or key'; el.style.color='var(--adm-red)'; return; }
+  const key = settings.supabaseKey || '';
+  if (key.startsWith('sb_')) {
+    el.innerHTML = '❌ Wrong key type. Use the <strong>anon/public JWT</strong> key (starts with eyJ…) from Supabase Dashboard → Project Settings → API. The "publishable" key only works with the JS SDK, not direct REST calls.';
+    el.style.color='var(--adm-red)'; return;
+  }
   try {
     const res = await fetch(sbUrl('orders?select=id&limit=1'), { headers: sbHeaders() });
     if (res.ok || res.status === 406) {
       el.textContent = '✅ Connected!'; el.style.color='var(--adm-grn)';
     } else {
-      const body = await res.json().catch(()=>({}));
-      el.textContent = '❌ ' + (body.message || res.status); el.style.color='var(--adm-red)';
+      const text = await res.text().catch(()=>'');
+      if (text.includes('allowlist')) {
+        el.innerHTML = '❌ "Host not in allowlist" — wrong key type. Use the <strong>anon/public JWT</strong> key (starts with eyJ…), not the publishable key.';
+      } else {
+        el.textContent = '❌ HTTP ' + res.status + ': ' + (text.slice(0,120) || 'unknown error');
+      }
+      el.style.color='var(--adm-red)';
     }
   } catch(e) { el.textContent = '❌ ' + e.message; el.style.color='var(--adm-red)'; }
 }
