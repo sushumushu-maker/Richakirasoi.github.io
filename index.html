@@ -1436,7 +1436,7 @@ async function saveSettingsToCloud() {
   try {
     await fetch(sbUrl('app_settings') + '?on_conflict=key', {
       method: 'POST',
-      headers: { ...sbHeaders(), 'Prefer': 'resolution=merge-duplicates,return=minimal' },
+      headers: { ...sbHeaders(true), 'Prefer': 'resolution=merge-duplicates,return=minimal' },
       body: JSON.stringify(rows)
     });
   } catch(e) { console.warn('Settings cloud save error:', e); }
@@ -1489,8 +1489,7 @@ async function syncItemToCloud(item) {
   try {
     await fetch(sbUrl('menu_items') + '?on_conflict=id', {
       method: 'POST',
-      headers: { ...sbHeaders(), 'Prefer': 'resolution=merge-duplicates,return=minimal' },
-      body: JSON.stringify(itemToRow(item))
+      headers: { ...sbHeaders(true), 'Prefer': 'resolution=merge-duplicates,return=minimal' },
     });
   } catch(e) { console.warn('Menu sync error:', e); }
 }
@@ -1501,7 +1500,7 @@ async function deleteItemFromCloud(id) {
   try {
     await fetch(sbUrl('menu_items?id=eq.' + encodeURIComponent(id)), {
       method: 'DELETE',
-      headers: sbHeaders()
+      headers: sbHeaders(true)
     });
   } catch(e) { console.warn('Menu delete error:', e); }
 }
@@ -1513,8 +1512,7 @@ async function syncAllMenuToCloud() {
     // Upsert all items at once
     await fetch(sbUrl('menu_items') + '?on_conflict=id', {
       method: 'POST',
-      headers: { ...sbHeaders(), 'Prefer': 'resolution=merge-duplicates,return=minimal' },
-      body: JSON.stringify(menuItems.map(itemToRow))
+      headers: { ...sbHeaders(true), 'Prefer': 'resolution=merge-duplicates,return=minimal' },
     });
   } catch(e) { console.warn('Full menu sync error:', e); }
 }
@@ -1983,12 +1981,21 @@ async function placeOrder() {
     try {
       const res = await fetch(sbUrl('orders'), {
         method: 'POST',
-        headers: sbHeaders(),
+        headers: sbHeaders(true),
         body: JSON.stringify(payload)
       });
-      if (res.ok || res.status === 201) { saved = true; console.log('✅ Order saved to Supabase'); }
-      else { const b = await res.json().catch(()=>({})); console.warn('Supabase insert error', b); }
-    } catch(e) { console.warn('Supabase exception', e); }
+      if (res.ok || res.status === 201) {
+        saved = true;
+        console.log('✅ Order saved to Supabase');
+      } else {
+        const b = await res.json().catch(()=>({}));
+        console.warn('Supabase insert error', res.status, b);
+        showStoreToast('⚠️ Cloud save failed — order saved locally', 'e');
+      }
+    } catch(e) {
+      console.warn('Supabase exception', e);
+      showStoreToast('⚠️ Cloud save failed — order saved locally', 'e');
+    }
   }
 
   /* ── 2. Always save locally (as backup) ── */
@@ -2032,13 +2039,6 @@ function copyOrderId() {
 /* ═══════════════════════════════════════
    ORDER MODIFY / TRACK
 ═══════════════════════════════════════ */
-/* Store toast */
-function showStoreToast(msg, type) {
-  const t = document.getElementById('store-toast');
-  t.textContent=msg; t.className=`toast ${type==='s'?'ts':type==='e'?'te':''} show`;
-  setTimeout(()=>t.classList.remove('show'),2600);
-}
-
 /* Store toast */
 function showStoreToast(msg, type) {
   const t = document.getElementById('store-toast');
@@ -2568,13 +2568,16 @@ function showAdmToast(msg, type) {
 /* ═══════════════════════════════════════
    SUPABASE HELPERS  (plain fetch – no SDK)
 ═══════════════════════════════════════ */
-function sbHeaders() {
-  return {
-    'Content-Type': 'application/json',
+function sbHeaders(write) {
+  const h = {
     'apikey': settings.supabaseKey || '',
-    'Authorization': 'Bearer ' + (settings.supabaseKey || ''),
-    'Prefer': 'return=minimal'
+    'Authorization': 'Bearer ' + (settings.supabaseKey || '')
   };
+  if (write) {
+    h['Content-Type'] = 'application/json';
+    h['Prefer'] = 'return=representation';
+  }
+  return h;
 }
 
 function sbUrl(path) {
@@ -2837,7 +2840,7 @@ async function updateOrderStatus(id, status) {
     try {
       const res = await fetch(sbUrl('orders?id=eq.' + id), {
         method: 'PATCH',
-        headers: sbHeaders(),
+        headers: sbHeaders(true),
         body: JSON.stringify({ status })
       });
       if (res.ok) { showAdmToast('✅ Status updated','gr'); return; }
